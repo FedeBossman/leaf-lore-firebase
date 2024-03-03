@@ -48,14 +48,23 @@
             "type": "shell",
             "command": "source ~/.zshrc && firebase functions:config:get > .runtimeconfig.json",
             "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "presentation": {
                 "reveal": "always",
                 "panel": "shared"
             }
+        },
+        {
+            "type": "npm",
+            "script": "build:watch",
+            "path": "functions",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "label": "npm: build:watch - functions",
+            "detail": "tsc --watch"
         }
     ]
 }
