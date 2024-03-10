@@ -19,7 +19,7 @@ import {
   mapChatCompletionMessageToChatMessage,
   mapChatMessageToChatCompletionMessageParam,
   mapStringToUserChatMessage} from "./mappers/chat.mapper";
-import { addChatRecordToFirestore, getChatRecordFromFirestore, saveChatMessageToFirestore } from "./repository/chat.repository";
+import { addChatRecordToFirestore, addDefaultChatRecordToFirestore, getChatRecordFromFirestore, getDegaultChatRecordFromFirestore, saveChatMessageToFirestore } from "./repository/chat.repository";
 import { Timestamp } from "firebase-admin/firestore";
 import { createGptChat } from "./client/openai-gpt.client";
 
@@ -31,23 +31,24 @@ exports.createChat = functions.https.onCall(async (data, context) => {
   }
   const userId = context.auth.uid;
 
-  const systemMessage: ChatMessage = {
-    role: "system",
-    // eslint-disable-next-line max-len
-    content: "Don't answer with more than 80 words. Max 300 characters per response. You are a helpful gardening assistant. Be cheerful and green, gardening puns are nice. Introduce yourself and explain how you can assist with gardening.",
-    timestamp: Timestamp.now(),
-  };
-  const gptResponse = await createGptChat([
-    mapChatMessageToChatCompletionMessageParam(systemMessage),
-  ]);
-
-  const gptResponseMessage = gptResponse.choices[0].message;
-  const chatRef = await addChatRecordToFirestore(userId, [
-    systemMessage,
-    mapChatCompletionMessageToChatMessage(gptResponseMessage),
-  ]);
+  const chatRef = await createPlantChat(userId);
 
   return {chatId: chatRef.id};
+});
+
+exports.getDefaultChat = functions.https.onCall(async (data, context) => {
+  if (!context.auth?.uid) {
+    throw new functions.https.HttpsError("unauthenticated", "The function must be called while authenticated.");
+  }
+  const userId = context.auth.uid;
+
+  const defaultChat = await getDegaultChatRecordFromFirestore(userId);
+  if (defaultChat.empty) {
+    const chatRef = await createDefaultChat(userId);
+    return {chatId: chatRef.id};
+  } else {
+    return {chatId: defaultChat.docs[0].id};
+  }
 });
 
 exports.postMessage = functions.https.onCall(async (data, context) => {
@@ -84,5 +85,48 @@ exports.postMessage = functions.https.onCall(async (data, context) => {
   return {success: true};
 });
 
+const createPlantChat = async (userId: string) => {
+  const systemMessage: ChatMessage = {
+    role: "system",
+    // eslint-disable-next-line max-len
+    content: "Don't answer with more than 80 words. Max 300 characters per response. You are a plant. Introduce yourself with info about how to care for you.",
+    timestamp: Timestamp.now(),
+  };
+  const gptResponse = await createGptChat([
+    mapChatMessageToChatCompletionMessageParam(systemMessage),
+  ]);
+  const gptResponseMessage = gptResponse.choices[0].message;
+  const chatRef = await addChatRecordToFirestore(userId, "Plant",[
+    systemMessage,
+    mapChatCompletionMessageToChatMessage(gptResponseMessage),
+  ]);
+  return chatRef;
+}
 
+const createDefaultChat = async (userId: string) => {
 
+  const systemRules = [
+    // "Don't answer with more than 80 words",
+    "Max 300 characters per response", 
+    "Always and only return a json object with a 'content' property, along with 'userExperienceLevel', 'userLocation', 'userGoals', 'nickname' as you start discovering that information", 
+    "You are a helpful gardening assistant: Sprout",
+    "Be cheerful and green, gardening puns are nice",
+    "Introduce yourself and explain how you can assist with gardening",
+    "Initial objective is to identify where the use is located, what his/her goals are, experience level and nickname"
+  ];
+  const systemMessage: ChatMessage = {
+    role: "system",
+    // eslint-disable-next-line max-len
+    content: systemRules.join(". "),
+    timestamp: Timestamp.now(),
+  };
+  const gptResponse = await createGptChat([
+    mapChatMessageToChatCompletionMessageParam(systemMessage),
+  ]);
+  const gptResponseMessage = gptResponse.choices[0].message;
+  const chatRef = await addDefaultChatRecordToFirestore(userId, "Gardener",[
+    systemMessage,
+    mapChatCompletionMessageToChatMessage(gptResponseMessage),
+  ]);
+  return chatRef;
+}
