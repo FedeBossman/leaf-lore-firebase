@@ -1,10 +1,6 @@
-import * as admin from "firebase-admin";
 import { DocumentData, DocumentSnapshot, FieldValue, QuerySnapshot, Timestamp } from "firebase-admin/firestore";
 import { ChatMessage } from "../models/domain/chat.model";
-
-admin.initializeApp();
-
-const db = admin.firestore();
+import { db } from "./firestore";
 
 
 export const getChatRecordFromFirestore = async (chatId: string): Promise<DocumentSnapshot<DocumentData>> => {
@@ -12,7 +8,7 @@ export const getChatRecordFromFirestore = async (chatId: string): Promise<Docume
   return chatRef.get();
 };
 
-export const getDegaultChatRecordFromFirestore = async (userId: string): Promise<QuerySnapshot<DocumentData>> => {
+export const getDefaultChatRecordFromFirestore = async (userId: string): Promise<QuerySnapshot<DocumentData>> => {
   return db.collection("chats")
     .where("userId", "==", userId)
     .where("defaultChat", "==", true)
@@ -49,4 +45,3 @@ export const saveChatMessageToFirestore = async (chatId: string, message: ChatMe
     ),
   });
 };
-

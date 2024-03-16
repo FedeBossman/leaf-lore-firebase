@@ -1,6 +1,7 @@
 import {ChatCompletionMessage, ChatCompletionMessageParam} from "openai/resources";
-import {ChatMessage} from "../models/domain/chat.model";
+import {ChatMessage, ChatResponse} from "../models/domain/chat.model";
 import {Timestamp} from "firebase-admin/firestore";
+import { HomePageInfo } from "../models/domain/home-page-info.model";
 
 
 export const mapStringToUserChatMessage = (message: string): ChatMessage => ({
@@ -15,8 +16,20 @@ export const mapChatMessageToChatCompletionMessageParam = (message: ChatMessage)
 });
 
 export const mapChatCompletionMessageToChatMessage =
-(message: ChatCompletionMessage): ChatMessage => ({
-  role: message.role,
-  content: message.content?.trim() ?? "",
-  timestamp: Timestamp.now(),
-});
+(message: ChatCompletionMessage): ChatMessage => {
+  const assistantResponse: ChatResponse = JSON.parse(message.content ?? "{}");
+
+  return {
+    role: message.role,
+    content: assistantResponse.userMessage?.trim() ?? "",
+    timestamp: Timestamp.now(),
+  }
+};
+
+export const mapChatCompletionMessageToHomePageInfo = (message: ChatCompletionMessage, userId: string): HomePageInfo => {
+  const content = message.content?.trim() ?? "";
+  const homePageInfo: HomePageInfo = JSON.parse(content);
+  homePageInfo.userId = userId;
+  homePageInfo.createdAt = Timestamp.now();
+  return homePageInfo;
+};

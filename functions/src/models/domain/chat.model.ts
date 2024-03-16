@@ -1,6 +1,10 @@
 import {Timestamp} from "firebase-admin/firestore";
 import {ChatRole} from "../enums";
 
+export interface ChatResponse {
+    userMessage: string;
+    isNewHPIAvailable: boolean;
+}
 
 
 export interface ChatRecord {
