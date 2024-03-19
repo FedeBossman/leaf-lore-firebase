@@ -4,10 +4,10 @@ export type ExperienceLevelDetails = {
 };
 
 export enum ExperienceLevel {
-    Beginner = "beginner",
-    Intermediate = "intermediate",
-    Advanced = "advanced",
-    Expert = "expert"
+    Beginner = "Beginner",
+    Intermediate = "Intermediate",
+    Advanced = "Advanced",
+    Expert = "Expert"
 }
 
 export const experienceLevels: Record<ExperienceLevel, ExperienceLevelDetails> = {

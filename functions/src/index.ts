@@ -8,7 +8,7 @@ import {
   mapChatCompletionMessageToChatMessage,
   mapChatMessageToChatCompletionMessageParam,
   mapStringToUserChatMessage} from "./mappers/chat.mapper";
-import { createGptChat } from "./client/openai-gpt.client";
+import { createGptJson } from "./client/openai-gpt.client";
 import { createPlantChat, createDefaultChat, getHpiIndicatorMessage } from "./processors/chat.processor";
 import { getDefaultChatRecordFromFirestore, getChatRecordFromFirestore, saveChatMessageToFirestore } from "./repository/chat.repository";
 import { getHomePageInfoRecordFromFirestore } from "./repository/home-page-info.repository";
@@ -16,6 +16,8 @@ import { updateHomePageInfo } from "./processors/home-page-info.processor";
 import { ChatCompletionMessageParam } from "openai/resources";
 import { logger } from "firebase-functions/v1";
 import { ChatResponse } from "./models/domain/chat.model";
+import { getDailyTip, getSeasonalTip } from "./repository/tip.repository";
+import { createDailyTip, createSeasonalTip } from "./processors/tip.processor";
 
 
 exports.createChat = onCall(async (data, context) => {
@@ -68,7 +70,7 @@ exports.postMessage = onCall(async (data, context) => {
   const messages: ChatCompletionMessageParam[] = chatDoc.data()?.messages.map(mapChatMessageToChatCompletionMessageParam);
   const hpiIndicatorMessage = await getHpiIndicatorMessage(userId);
   messages.splice(1, 0, hpiIndicatorMessage);
-  const gptResponse = await createGptChat([
+  const gptResponse = await createGptJson([
     ...messages,
     mapChatMessageToChatCompletionMessageParam(userMessage),
   ]);
@@ -81,7 +83,7 @@ exports.postMessage = onCall(async (data, context) => {
 
   if (assistantResponse.isNewHPIAvailable) {
     logger.info("New HPI available");
-    await updateHomePageInfo(userId);
+    updateHomePageInfo(userId);
   }
   return {success: true};
 });
@@ -97,4 +99,33 @@ exports.getHomePageInfo = onCall(async (data, context) => {
   const homePageInfo = await getHomePageInfoRecordFromFirestore(userId);
 
   return homePageInfo;
+});
+
+exports.getDailyTip = onCall(async (data, context) => {
+  if (!context.auth?.uid) {
+    throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
+  }
+  const userId = context.auth.uid;
+  let dailyTip = await getDailyTip(userId);
+
+  if (!dailyTip) {
+      dailyTip = await createDailyTip(userId);
+  }
+
+  return dailyTip;
+});
+
+
+exports.getSeasonalTip = onCall(async (data, context) => {
+  if (!context.auth?.uid) {
+    throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
+  }
+  const userId = context.auth.uid;
+  let dailyTip = await getSeasonalTip(userId);
+
+  if (!dailyTip) {
+      dailyTip = await createSeasonalTip(userId);
+  }
+
+  return dailyTip;
 });

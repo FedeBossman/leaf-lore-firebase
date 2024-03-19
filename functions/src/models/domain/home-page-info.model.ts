@@ -8,7 +8,7 @@ export interface HomePageInfo {
     userId: string;
     createdAt: Timestamp;
     experience: ExperienceLevel | null;
-    goals: UserGoals[] | null;
+    goals: UserGoals[];
     nickname: string | null;
     location: LocationDetails | null;
     type: GardenerTypes | null;

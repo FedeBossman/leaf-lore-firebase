@@ -3,13 +3,15 @@ import { ChatMessage } from "../models/domain/chat.model";
 import { db } from "./firestore";
 
 
+const chatCollection = "chats";
+
 export const getChatRecordFromFirestore = async (chatId: string): Promise<DocumentSnapshot<DocumentData>> => {
-  const chatRef = db.collection("chats").doc(chatId);
+  const chatRef = db.collection(chatCollection).doc(chatId);
   return chatRef.get();
 };
 
 export const getDefaultChatRecordFromFirestore = async (userId: string): Promise<QuerySnapshot<DocumentData>> => {
-  return db.collection("chats")
+  return db.collection(chatCollection)
     .where("userId", "==", userId)
     .where("defaultChat", "==", true)
     .get();
@@ -17,7 +19,7 @@ export const getDefaultChatRecordFromFirestore = async (userId: string): Promise
 
 export const addDefaultChatRecordToFirestore = async (userId: string, name: string, messages: ChatMessage[]) => {
   const timestamp = Timestamp.now();
-  return await db.collection("chats").add({
+  return await db.collection(chatCollection).add({
     userId: userId,
     createdAt: timestamp,
     messages: messages,
@@ -28,7 +30,7 @@ export const addDefaultChatRecordToFirestore = async (userId: string, name: stri
 
 export const addChatRecordToFirestore = async (userId: string, name: string, messages: ChatMessage[]) => {
   const timestamp = Timestamp.now();
-  return await db.collection("chats").add({
+  return await db.collection(chatCollection).add({
     userId: userId,
     createdAt: timestamp,
     messages: messages,
@@ -38,7 +40,7 @@ export const addChatRecordToFirestore = async (userId: string, name: string, mes
 };
 
 export const saveChatMessageToFirestore = async (chatId: string, message: ChatMessage) => {
-  const chatRef = db.collection("chats").doc(chatId);
+  const chatRef = db.collection(chatCollection).doc(chatId);
   return chatRef.update({
     messages: FieldValue.arrayUnion(
       message

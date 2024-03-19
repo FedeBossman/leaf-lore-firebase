@@ -35,7 +35,7 @@ export const updateHomePageInfo = async (userId: string) => {
     "Given a user's responses about their plant care knowledge and activities return a json object with the following fields: 'experience', 'goals', 'nickname', 'location', 'type' as you start discovering that information",
     "'experience' is one of the following values: " + experienceLevelNames,
     "Don't make up the values, use the user's responses to create the object",
-    "If you can't find a value, send null",
+    "If you can't find a value, send null, or empty list",
     "'location' field will have the following fields: 'city', 'state', 'country', 'type' (" + locationTypes + ")",
     "'goals' field will have a list of the following values: " + goals,
     "'nickname' field will have a string value created based on the user's goals, experience, and location. No need to use all or explicit, but it needs to have a sense of representation and it has to be a couple words like 'Budding Botanist'",
