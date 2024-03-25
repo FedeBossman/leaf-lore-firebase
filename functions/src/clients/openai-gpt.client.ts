@@ -1,7 +1,7 @@
 import { OpenAI } from "openai";
 import * as functions from "firebase-functions";
 import { ChatCompletion, ChatCompletionMessageParam } from "openai/resources";
-import * as logger from "firebase-functions/logger";
+import { logger } from "firebase-functions/v2";
 
 const openai = new OpenAI({ apiKey: functions.config().openai.key });
 

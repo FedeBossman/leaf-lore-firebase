@@ -1,17 +1,16 @@
-import { HttpsError, onCall } from "firebase-functions/v1/https";
+import { onCall } from "firebase-functions/v2/https";
 import { updateHomePageInfo } from "./home-page-info.processor";
 import { getHomePageInfoRecordFromFirestore } from "./home-page-info.repository";
+import { withMiddleware } from "../../shared/middleware/middleware";
+import { authenticate } from "../../shared/middleware/auth.middleware";
 
-exports.getHomePageInfo = onCall(async (data, context) => {
-    if (!context.auth?.uid) {
-      throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
-    }
-    const userId = context.auth.uid;
+exports.getHomePageInfo = onCall(withMiddleware([authenticate], async ({auth}) => {
+    const userId = auth!.uid;
   
     await updateHomePageInfo(userId);
   
     const homePageInfo = await getHomePageInfoRecordFromFirestore(userId);
   
     return homePageInfo;
-  });
+  }));
   

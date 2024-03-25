@@ -1,45 +1,37 @@
-import { HttpsError, onCall } from "firebase-functions/v1/https";
+import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { createDefaultChat, createPlantChat, getHpiIndicatorMessage } from "./chat.processor";
 import { getChatRecordFromFirestore, getDefaultChatRecordFromFirestore, saveChatMessageToFirestore } from "./chat.repository";
 import { mapChatCompletionMessageToChatMessage, mapChatMessageToChatCompletionMessageParam, mapStringToUserChatMessage } from "./mappers/chat.mapper";
 import { createGptJson } from "../../clients/openai-gpt.client";
 import { ChatCompletionMessageParam } from "openai/resources";
-import { logger } from "firebase-functions/v1";
+import { logger } from "firebase-functions/v2";
 import { updateHomePageInfo } from "../home-page-info/home-page-info.processor";
-import { ChatResponse } from "./chat.model";
+import { ChatResponse, MessageDto } from "./chat.model";
+import { user } from "firebase-functions/v1/auth";
+import { withMiddleware } from "../../shared/middleware/middleware";
+import { authenticate } from "../../shared/middleware/auth.middleware";
 
-exports.createChat = onCall(async (data, context) => {
-    if (!context.auth?.uid) {
-      throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
+exports.createDefaultChat = user().onCreate(async (user) => {
+    const userId = user.uid;
+    const defaultChat = await getDefaultChatRecordFromFirestore(userId);
+    if (defaultChat.empty) {
+        const chatRef = await createDefaultChat(userId);
+        return {chatId: chatRef.id};
+    } else {
+        return {chatId: defaultChat.docs[0].id};
     }
-    const userId = context.auth.uid;
+});
+  
+exports.createChat = onCall(withMiddleware([authenticate], async ({auth}) => {
+    const userId = auth!.uid;
   
     const chatRef = await createPlantChat(userId);
   
     return {chatId: chatRef.id};
-  });
+}));
   
-  exports.getDefaultChat = onCall(async (data, context) => {
-    if (!context.auth?.uid) {
-      throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
-    }
-    const userId = context.auth.uid;
-  
-    const defaultChat = await getDefaultChatRecordFromFirestore(userId);
-    if (defaultChat.empty) {
-      const chatRef = await createDefaultChat(userId);
-      return {chatId: chatRef.id};
-    } else {
-      return {chatId: defaultChat.docs[0].id};
-    }
-  });
-  
-  exports.postMessage = onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
-    }
-  
-    const userId = context.auth.uid;
+exports.postMessage = onCall(withMiddleware<MessageDto>([authenticate], async ({data, auth}) => {
+    const userId = auth!.uid;
     const {chatId, message} = data;
   
     if (!chatId || !message) {
@@ -74,4 +66,4 @@ exports.createChat = onCall(async (data, context) => {
       updateHomePageInfo(userId);
     }
     return {success: true};
-  });
+}));

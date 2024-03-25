@@ -22,3 +22,8 @@ export interface ChatMessage {
     content: string,
     timestamp: Timestamp
 }
+
+export interface MessageDto {
+    chatId: string;
+    message: string;
+}

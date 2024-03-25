@@ -1,12 +1,11 @@
-import { onCall, HttpsError } from "firebase-functions/v1/https";
+import { onCall } from "firebase-functions/v2/https";
 import { createDailyTip, createSeasonalTip } from "./tip.processor";
 import { getDailyTip, getSeasonalTip } from "./tip.repository";
+import { withMiddleware } from "../../shared/middleware/middleware";
+import { authenticate } from "../../shared/middleware/auth.middleware";
 
-exports.getDailyTip = onCall(async (data, context) => {
-    if (!context.auth?.uid) {
-      throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
-    }
-    const userId = context.auth.uid;
+exports.getDailyTip = onCall(withMiddleware([authenticate], async ({auth}) => {
+    const userId = auth!.uid;
     let dailyTip = await getDailyTip(userId);
   
     if (!dailyTip) {
@@ -14,13 +13,10 @@ exports.getDailyTip = onCall(async (data, context) => {
     }
   
     return dailyTip;
-  });
+  }));
   
-  exports.getSeasonalTip = onCall(async (data, context) => {
-    if (!context.auth?.uid) {
-      throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
-    }
-    const userId = context.auth.uid;
+  exports.getSeasonalTip = onCall(withMiddleware([authenticate], async ({auth}) => {
+    const userId = auth!.uid;
     let dailyTip = await getSeasonalTip(userId);
   
     if (!dailyTip) {
@@ -28,4 +24,4 @@ exports.getDailyTip = onCall(async (data, context) => {
     }
   
     return dailyTip;
-  });
+  }));
