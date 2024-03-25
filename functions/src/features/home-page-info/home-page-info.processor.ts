@@ -1,16 +1,16 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { createGptJson } from "../client/openai-gpt.client";
+import { createGptJson } from "../../clients/openai-gpt.client";
 import {
   mapChatMessageToChatCompletionMessageParam,
   mapChatCompletionMessageToHomePageInfo,
-} from "../mappers/chat.mapper";
-import { ChatMessage } from "../models/domain/chat.model";
-import { getDefaultChatRecordFromFirestore } from "../repository/chat.repository";
-import { saveHomePageInfoToFirestore } from "../repository/home-page-info.repository";
-import { LocationType } from "../models/domain/location.model";
-import { ExperienceLevel } from "../models/domain/experience-level.model";
-import { GardenerTypes } from "../models/domain/gardener-type.model";
-import { UserGoals } from "../models/domain/user-goal.model";
+} from "../chats/mappers/chat.mapper";
+import { ChatMessage } from "../chats/chat.model";
+import { getDefaultChatRecordFromFirestore } from "../chats/chat.repository";
+import { saveHomePageInfoToFirestore } from "./home-page-info.repository";
+import { LocationType } from "./model/location.model";
+import { ExperienceLevel } from "./model/experience-level.model";
+import { GardenerTypes } from "./model/gardener-type.model";
+import { UserGoals } from "./model/user-goal.model";
 
 export const updateHomePageInfo = async (userId: string) => {
   const defaultChat = await getDefaultChatRecordFromFirestore(userId);

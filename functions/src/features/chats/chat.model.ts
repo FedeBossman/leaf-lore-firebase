@@ -1,5 +1,5 @@
 import {Timestamp} from "firebase-admin/firestore";
-import {ChatRole} from "../enums";
+import {ChatRole} from "./chat.enums";
 
 export interface ChatResponse {
     userMessage: string;

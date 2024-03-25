@@ -32,7 +32,7 @@
         {
             "label": "Start Firebase Emulators (Inspect Functions)",
             "type": "shell",
-            "command": "source ~/.zshrc && firebase emulators:start --inspect-functions",
+            "command": "source ~/.zshrc && firebase emulators:start --inspect-functions --import=./firebase-export/emulator",
             "problemMatcher": [],
             "group": {
                 "kind": "build",

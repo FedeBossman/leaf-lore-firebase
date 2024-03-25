@@ -1,5 +1,5 @@
-import { db } from "./firestore";
-import { HomePageInfo } from "../models/domain/home-page-info.model";
+import { db } from "../../shared/firestoreConnection";
+import { HomePageInfo } from "./model/home-page-info.model";
 
 const homePageInfoCollection = "homePageInfo";
 

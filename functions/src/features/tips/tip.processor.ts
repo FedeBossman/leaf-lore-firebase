@@ -1,10 +1,10 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { ChatMessage } from "../models/domain/chat.model";
-import { createGptMessage } from "../client/openai-gpt.client";
-import { mapChatMessageToChatCompletionMessageParam } from "../mappers/chat.mapper";
-import { getHpiIndicatorMessage } from "./chat.processor";
-import { Tip } from "../models/domain/tip.model";
-import { addTipToFirestore } from "../repository/tip.repository";
+import { ChatMessage } from "../chats/chat.model";
+import { createGptMessage } from "../../clients/openai-gpt.client";
+import { mapChatMessageToChatCompletionMessageParam } from "../chats/mappers/chat.mapper";
+import { getHpiIndicatorMessage } from "../chats/chat.processor";
+import { Tip } from "./tip.model";
+import { addTipToFirestore } from "./tip.repository";
 
 export const createDailyTip = async (userId: string): Promise<Tip> => {
     const systemRules = [

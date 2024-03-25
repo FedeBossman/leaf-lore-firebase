@@ -1,5 +1,8 @@
-#Sercrets
+#Secrets
 .secrets.env
+
+# FIrebase exports
+firebase-export
 
 # DS store
 .DS_Store

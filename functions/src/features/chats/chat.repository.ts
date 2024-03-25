@@ -1,6 +1,6 @@
 import { DocumentData, DocumentSnapshot, FieldValue, QuerySnapshot, Timestamp } from "firebase-admin/firestore";
-import { ChatMessage } from "../models/domain/chat.model";
-import { db } from "./firestore";
+import { ChatMessage } from "./chat.model";
+import { db } from "../../shared/firestoreConnection";
 
 
 const chatCollection = "chats";

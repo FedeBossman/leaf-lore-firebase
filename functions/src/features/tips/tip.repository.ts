@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { db } from "./firestore";
-import { Tip, TipCategory } from "../models/domain/tip.model";
-import { getEndOfDay, getEndOfSeason, getStartOfDay, getStartOfSeason } from "../utils/date.utils";
+import { db } from "../../shared/firestoreConnection";
+import { Tip, TipCategory } from "./tip.model";
+import { getEndOfDay, getEndOfSeason, getStartOfDay, getStartOfSeason } from "../../shared/utils/date.utils";
 
 const tipsCollection = 'tips';
 

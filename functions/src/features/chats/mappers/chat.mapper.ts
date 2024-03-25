@@ -1,7 +1,7 @@
 import {ChatCompletionMessage, ChatCompletionMessageParam} from "openai/resources";
-import {ChatMessage, ChatResponse} from "../models/domain/chat.model";
+import {ChatMessage, ChatResponse} from "../chat.model";
 import {Timestamp} from "firebase-admin/firestore";
-import { HomePageInfo } from "../models/domain/home-page-info.model";
+import { HomePageInfo } from "../../home-page-info/model/home-page-info.model";
 
 
 export const mapStringToUserChatMessage = (message: string): ChatMessage => ({

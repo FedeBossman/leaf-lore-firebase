@@ -1,19 +1,19 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { createGptChat } from "../client/openai-gpt.client";
+import { createGptJson } from "../../clients/openai-gpt.client";
 import {
   mapChatMessageToChatCompletionMessageParam,
   mapChatCompletionMessageToChatMessage,
-} from "../mappers/chat.mapper";
-import { ChatMessage } from "../models/domain/chat.model";
+} from "./mappers/chat.mapper";
+import { ChatMessage } from "./chat.model";
 import {
   addChatRecordToFirestore,
   addDefaultChatRecordToFirestore,
-} from "../repository/chat.repository";
-import { ExperienceLevel } from "../models/domain/experience-level.model";
-import { GardenerTypes } from "../models/domain/gardener-type.model";
-import { LocationType } from "../models/domain/location.model";
-import { UserGoals } from "../models/domain/user-goal.model";
-import { getHomePageInfoRecordFromFirestore } from "../repository/home-page-info.repository";
+} from "./chat.repository";
+import { ExperienceLevel } from "../home-page-info/model/experience-level.model";
+import { GardenerTypes } from "../home-page-info/model/gardener-type.model";
+import { LocationType } from "../home-page-info/model/location.model";
+import { UserGoals } from "../home-page-info/model/user-goal.model";
+import { getHomePageInfoRecordFromFirestore } from "../home-page-info/home-page-info.repository";
 import { ChatCompletionMessageParam } from "openai/resources";
 
 export const createPlantChat = async (userId: string) => {
@@ -29,10 +29,11 @@ export const createPlantChat = async (userId: string) => {
     content: systemRules.join(". "),
     timestamp: Timestamp.now(),
   };
-  const gptResponse = await createGptChat([
+  const gptResponse = await createGptJson([
     mapChatMessageToChatCompletionMessageParam(systemMessage),
   ]);
   const gptResponseMessage = gptResponse.choices[0].message;
+  
   const chatRef = await addChatRecordToFirestore(userId, "Plant", [
     systemMessage,
     mapChatCompletionMessageToChatMessage(gptResponseMessage),
@@ -60,7 +61,7 @@ export const createDefaultChat = async (userId: string) => {
     content: systemRules.join(". "),
     timestamp: Timestamp.now(),
   };
-  const gptResponse = await createGptChat([
+  const gptResponse = await createGptJson([
     mapChatMessageToChatCompletionMessageParam(systemMessage),
   ]);
   const gptResponseMessage = gptResponse.choices[0].message;

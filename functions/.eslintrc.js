@@ -28,7 +28,7 @@ module.exports = {
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,
     "indent": ["error", 2],
-    "max-len": ["error", {"code": 120, "tabWidth": 2, "ignoreUrls": true}],
+    "max-len": ["error", {"code": 160, "tabWidth": 2, "ignoreUrls": true}],
     "require-jsdoc": "off", // This disables the require-jsdoc rule
   },
 };
