@@ -1,15 +1,16 @@
 import { HttpsError, onCall } from "firebase-functions/v2/https";
-import { createDefaultChat, createPlantChat, getHpiIndicatorMessage } from "./chat.processor";
+import { createDefaultChat, createPlantChat, getHpiIndicatorMessage } from "./chat.service";
 import { getChatRecordFromFirestore, getDefaultChatRecordFromFirestore, saveChatMessageToFirestore } from "./chat.repository";
 import { mapChatCompletionMessageToChatMessage, mapChatMessageToChatCompletionMessageParam, mapStringToUserChatMessage } from "./mappers/chat.mapper";
 import { createGptJson } from "../../clients/openai-gpt.client";
 import { ChatCompletionMessageParam } from "openai/resources";
 import { logger } from "firebase-functions/v2";
-import { updateHomePageInfo } from "../home-page-info/home-page-info.processor";
-import { ChatResponse, MessageDto } from "./chat.model";
+import { updateHomePageInfo } from "../home-page-info/home-page-info.service";
+import { ChatResponse } from "./chat.model";
 import { user } from "firebase-functions/v1/auth";
 import { withMiddleware } from "../../shared/middleware/middleware";
 import { authenticate } from "../../shared/middleware/auth.middleware";
+import { AddMessageDto } from "./chat.dto";
 
 exports.createDefaultChat = user().onCreate(async (user) => {
     const userId = user.uid;
@@ -30,7 +31,7 @@ exports.createChat = onCall(withMiddleware([authenticate], async ({auth}) => {
     return {chatId: chatRef.id};
 }));
   
-exports.postMessage = onCall(withMiddleware<MessageDto>([authenticate], async ({data, auth}) => {
+exports.postMessage = onCall(withMiddleware<AddMessageDto>([authenticate], async ({data, auth}) => {
     const userId = auth!.uid;
     const {chatId, message} = data;
   

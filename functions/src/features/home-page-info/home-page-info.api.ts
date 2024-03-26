@@ -1,5 +1,5 @@
 import { onCall } from "firebase-functions/v2/https";
-import { updateHomePageInfo } from "./home-page-info.processor";
+import { updateHomePageInfo } from "./home-page-info.service";
 import { getHomePageInfoRecordFromFirestore } from "./home-page-info.repository";
 import { withMiddleware } from "../../shared/middleware/middleware";
 import { authenticate } from "../../shared/middleware/auth.middleware";

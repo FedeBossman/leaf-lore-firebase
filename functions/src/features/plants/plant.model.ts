@@ -1,6 +1,7 @@
+import { UserOwned } from "../../shared/user-owned.interface";
 import { CareLevel, SunlightRequirement, WateringFrequency, FertilizationFrequency, SoilType, PotSize, HumidityRequirement } from "./plant.enums";
 
-export interface Plant {
+export interface Plant extends UserOwned {
     name: string;
     nickname: string;
     startDate: Date;
@@ -13,4 +14,5 @@ export interface Plant {
     humidityRequirement: HumidityRequirement;
     notes?: string;
   }
+  
   

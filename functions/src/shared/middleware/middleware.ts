@@ -1,7 +1,7 @@
 import { CallableRequest } from "firebase-functions/v2/https";
 
 export type Middleware = (
-    request: CallableRequest<T>
+    request: CallableRequest<any>
 ) => Promise<void> | void;
 
 export function withMiddleware<T>(

@@ -1,4 +1,3 @@
-import { Timestamp } from "firebase-admin/firestore";
 import { createGptJson } from "../../clients/openai-gpt.client";
 import {
   mapChatMessageToChatCompletionMessageParam,
@@ -11,6 +10,7 @@ import { LocationType } from "./model/location.model";
 import { ExperienceLevel } from "./model/experience-level.model";
 import { GardenerTypes } from "./model/gardener-type.model";
 import { UserGoals } from "./model/user-goal.model";
+import { mapSystemRulesToChatCompletionSystemMessageParam } from "../../shared/openai-gpt.mapper";
 
 export const updateHomePageInfo = async (userId: string) => {
   const defaultChat = await getDefaultChatRecordFromFirestore(userId);
@@ -43,13 +43,9 @@ export const updateHomePageInfo = async (userId: string) => {
       gardenerTypeNames,
   ];
 
-  const systemMessage: ChatMessage = {
-    role: "system",
-    content: systemRules.join(". "),
-    timestamp: Timestamp.now(),
-  };
+  const systemMessage = mapSystemRulesToChatCompletionSystemMessageParam(systemRules);
   const gptResponse = await createGptJson(
-    [mapChatMessageToChatCompletionMessageParam(systemMessage), ...messages],
+    [systemMessage, ...messages],
     500
   );
 

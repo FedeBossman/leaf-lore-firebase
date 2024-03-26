@@ -1,5 +1,5 @@
 import { onCall } from "firebase-functions/v2/https";
-import { createDailyTip, createSeasonalTip } from "./tip.processor";
+import { createDailyTip, createSeasonalTip } from "./tip.service";
 import { getDailyTip, getSeasonalTip } from "./tip.repository";
 import { withMiddleware } from "../../shared/middleware/middleware";
 import { authenticate } from "../../shared/middleware/auth.middleware";

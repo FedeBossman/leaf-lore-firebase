@@ -1,10 +1,9 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { ChatMessage } from "../chats/chat.model";
 import { createGptMessage } from "../../clients/openai-gpt.client";
-import { mapChatMessageToChatCompletionMessageParam } from "../chats/mappers/chat.mapper";
-import { getHpiIndicatorMessage } from "../chats/chat.processor";
+import { getHpiIndicatorMessage } from "../chats/chat.service";
 import { Tip } from "./tip.model";
 import { addTipToFirestore } from "./tip.repository";
+import { mapSystemRulesToChatCompletionSystemMessageParam } from "../../shared/openai-gpt.mapper";
 
 export const createDailyTip = async (userId: string): Promise<Tip> => {
     const systemRules = [
@@ -13,20 +12,16 @@ export const createDailyTip = async (userId: string): Promise<Tip> => {
       "Don't answer with more than 50 words (300 characters), the tip should be quick and easy to understand",
       "Ensure the tip is actionable",
       "Don't say things like \"here's a tip\" or \"my tip is\", just give the tip",
-      "The date is " + new Date().toLocaleDateString(),
+      "The current date is " + new Date().toLocaleDateString(),
     ];
 
     // TODO: previous tips
   
-    const systemMessage: ChatMessage = {
-      role: "system",
-      content: systemRules.join(". "),
-      timestamp: Timestamp.now(),
-    };
+    const systemMessage = mapSystemRulesToChatCompletionSystemMessageParam(systemRules);
 
     const hpiIndicatorMessage = await getHpiIndicatorMessage(userId);
     const gptResponse = await createGptMessage([
-      mapChatMessageToChatCompletionMessageParam(systemMessage),
+      systemMessage,
       hpiIndicatorMessage,
     ]);
 
@@ -53,15 +48,11 @@ export const createSeasonalTip = async (userId: string): Promise<Tip> => {
 
   // TODO: previous tips
 
-  const systemMessage: ChatMessage = {
-    role: "system",
-    content: systemRules.join(". "),
-    timestamp: Timestamp.now(),
-  };
+  const systemMessage = mapSystemRulesToChatCompletionSystemMessageParam(systemRules);
 
   const hpiIndicatorMessage = await getHpiIndicatorMessage(userId);
   const gptResponse = await createGptMessage([
-    mapChatMessageToChatCompletionMessageParam(systemMessage),
+    systemMessage,
     hpiIndicatorMessage,
   ]);
 
