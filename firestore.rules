@@ -1,13 +1,17 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /chats/{chatId} {
+    match /chats/{id} {
       allow read, write: if request.auth.uid == resource.data.userId;
     }
-    match /homePageInfo/{chatId} {
+    match /homePageInfo/{id} {
       allow read, write: if request.auth.uid == resource.data.userId;
     }
 
-    match /tips/{chatId} {
+    match /tips/{id} {
+      allow read, write: if request.auth.uid == resource.data.userId;
+    }
+
+    match /plants/{id} {
       allow read, write: if request.auth.uid == resource.data.userId;
     }
   }

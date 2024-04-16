@@ -4,6 +4,7 @@ import { withMiddleware } from "../../shared/middleware/middleware";
 import { authenticate } from "../../shared/middleware/auth.middleware";
 import { addPlantByName } from "./plant.service";
 import { AddPlantDto } from "./plant.dto";
+import { createPlantChat } from "../chats/chat.service";
 
 exports.getPlants = onCall(withMiddleware([authenticate], async ({data, auth}) => {
   // const userId = context.auth.uid;
@@ -17,6 +18,7 @@ exports.getPlants = onCall(withMiddleware([authenticate], async ({data, auth}) =
 
 exports.addPlant = onCall(withMiddleware<AddPlantDto>([authenticate], async ({data, auth}) => {
   const plantRef = await addPlantByName(auth!.uid, data.name);
+  createPlantChat(auth!.uid, data.name);
   return {plantId: plantRef.id};
 }));
   

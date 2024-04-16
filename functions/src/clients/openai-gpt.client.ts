@@ -4,29 +4,34 @@ import { ChatCompletion, ChatCompletionMessageParam } from "openai/resources";
 import { logger } from "firebase-functions/v2";
 
 const openai = new OpenAI({ apiKey: functions.config().openai.key });
+const openAiModel = "gpt-3.5-turbo";
 
 export const createGptMessage = async (messages: ChatCompletionMessageParam[], max_tokens = 500): Promise<ChatCompletion> => {
+  logger.info('Calling GPT', "model", openAiModel);
+
   const gptResponse = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: openAiModel,
     messages: messages,
     max_tokens,
   });
 
-  logger.info(`GPT-3.5-turbo token usage:`, gptResponse.usage);
+  logger.info('GPT call complete', "model", openAiModel, "usage", gptResponse.usage);
 
   return gptResponse;
 }
 
 
 export const createGptJson = async (messages: ChatCompletionMessageParam[], max_tokens = 500): Promise<ChatCompletion> => {
+  logger.info('Calling GPT', "model", openAiModel);
+
   const gptResponse = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: openAiModel,
     messages: messages,
     max_tokens,
     response_format: {type: "json_object"},
   });
 
-  logger.info(`GPT-3.5-turbo token usage:`, gptResponse.usage);
+  logger.info('GPT call complete', "model", openAiModel, "usage", gptResponse.usage);
 
   return gptResponse;
 }

@@ -15,13 +15,13 @@ exports.getDailyTip = onCall(withMiddleware([authenticate], async ({auth}) => {
     return dailyTip;
   }));
   
-  exports.getSeasonalTip = onCall(withMiddleware([authenticate], async ({auth}) => {
+exports.getSeasonalTip = onCall(withMiddleware([authenticate], async ({auth}) => {
     const userId = auth!.uid;
-    let dailyTip = await getSeasonalTip(userId);
-  
-    if (!dailyTip) {
-        dailyTip = await createSeasonalTip(userId);
+    let tip = await getSeasonalTip(userId);
+
+    if (!tip) {
+      tip = await createSeasonalTip(userId);
     }
-  
-    return dailyTip;
-  }));
+
+    return tip;
+}));

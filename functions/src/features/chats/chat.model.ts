@@ -4,6 +4,7 @@ import { ChatRole } from "./chat.enums";
 export interface ChatResponse {
   userMessage: string;
   isNewHPIAvailable: boolean;
+  isNewPlantAcquired: boolean;
 }
 
 export interface ChatRecord {

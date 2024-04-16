@@ -30,6 +30,20 @@
             }
         },
         {
+            "label": "Start Firebase Emulators (Clean)",
+            "type": "shell",
+            "command": "source ~/.zshrc && firebase emulators:start --inspect-functions",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
             "label": "Start Firebase Emulators (Inspect Functions)",
             "type": "shell",
             "command": "source ~/.zshrc && firebase emulators:start --inspect-functions --import=./firebase-export/emulator",

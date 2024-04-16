@@ -5,6 +5,18 @@ import { getEndOfDay, getEndOfSeason, getStartOfDay, getStartOfSeason } from "..
 
 const tipsCollection = 'tips';
 
+export const getDailyTips = async (userId: string): Promise<Tip[]> => {
+
+  const query = db.collection(tipsCollection)
+    .where('userId', '==', userId)
+    .where('category', '==', TipCategory.DAILY)
+    .limit(10);
+
+  const dailyTipsSnapshot = await query.get();
+
+  return dailyTipsSnapshot.docs.map(doc => doc.data() as Tip);
+}
+
 export const getDailyTip = async (userId: string): Promise<Tip|null> => {
   const today = new Date();
   const startOfToday = getStartOfDay(today);
@@ -24,6 +36,17 @@ export const getDailyTip = async (userId: string): Promise<Tip|null> => {
   }
 
   return dailyTipSnapshot.docs[0].data() as Tip;
+}
+
+export const getSeasonalTips = async (userId: string): Promise<Tip[]> => {
+  const query = db.collection(tipsCollection)
+    .where('userId', '==', userId)
+    .where('category', '==', TipCategory.SEASONAL)
+    .limit(10);
+
+  const dailyTipsSnapshot = await query.get();
+
+  return dailyTipsSnapshot.docs.map(doc => doc.data() as Tip);
 }
 
 export const getSeasonalTip = async (userId: string): Promise<Tip|null> => {
