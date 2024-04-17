@@ -1,5 +1,6 @@
 import { createGptJson } from "../../clients/openai-gpt.client";
 import { mapChatCompletionToJson, mapSystemRulesToChatCompletionSystemMessageParam } from "../../shared/openai-gpt.mapper";
+import { createPlantChat } from "../chats/chat.service";
 import { Plant } from "./plant.model";
 import { addPlantRecordToFirestore } from "./plant.repository";
 
@@ -24,7 +25,11 @@ export const addPlantByName = async (userId: string, plantName: string) => {
   const gptResponse = await createGptJson([systemMessage]);
   const plant: Plant = mapChatCompletionToJson<Plant>(gptResponse);
   plant.userId = userId;
-  return await addPlantRecordToFirestore(plant);
+  const ref = await addPlantRecordToFirestore(plant);
+
+  createPlantChat(userId, plant);
+
+  return ref;
 };
 
 

@@ -13,6 +13,6 @@ export interface Plant extends UserOwned {
     potSize: PotSize;
     humidityRequirement: HumidityRequirement;
     notes?: string;
-  }
+}
   
   

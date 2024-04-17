@@ -4,9 +4,9 @@ import { ChatCompletion, ChatCompletionMessageParam } from "openai/resources";
 import { logger } from "firebase-functions/v2";
 
 const openai = new OpenAI({ apiKey: functions.config().openai.key });
-const openAiModel = "gpt-3.5-turbo";
+const openAiModel = "gpt-4-turbo";
 
-export const createGptMessage = async (messages: ChatCompletionMessageParam[], max_tokens = 500): Promise<ChatCompletion> => {
+export const createGptMessage = async (messages: ChatCompletionMessageParam[], max_tokens = 1000): Promise<ChatCompletion> => {
   logger.info('Calling GPT', "model", openAiModel);
 
   const gptResponse = await openai.chat.completions.create({
@@ -21,7 +21,7 @@ export const createGptMessage = async (messages: ChatCompletionMessageParam[], m
 }
 
 
-export const createGptJson = async (messages: ChatCompletionMessageParam[], max_tokens = 500): Promise<ChatCompletion> => {
+export const createGptJson = async (messages: ChatCompletionMessageParam[], max_tokens = 1000): Promise<ChatCompletion> => {
   logger.info('Calling GPT', "model", openAiModel);
 
   const gptResponse = await openai.chat.completions.create({
