@@ -5,12 +5,29 @@ import {
 } from "../chats/mappers/chat.mapper";
 import { ChatMessage } from "../chats/chat.model";
 import { getDefaultChatRecordFromFirestore } from "../chats/chat.repository";
-import { saveHomePageInfoToFirestore } from "./home-page-info.repository";
+import { saveHomePageInfoToFirestore, updateHomePageInfoRecordWithPlantsNumber } from "./home-page-info.repository";
 import { LocationType } from "./model/location.model";
 import { ExperienceLevel } from "./model/experience-level.model";
 import { GardenerTypes } from "./model/gardener-type.model";
 import { UserGoals } from "./model/user-goal.model";
 import { mapSystemRulesToChatCompletionSystemMessageParam } from "../../shared/openai-gpt.mapper";
+import { Timestamp } from "firebase-admin/firestore";
+import { HomePageInfo } from "./model/home-page-info.model";
+
+export const createInitialHpi = async (userId: string) => {
+  const hpi: HomePageInfo = {
+    userId,
+    plantsCount: 0,
+    experience: null,
+    goals: [],
+    nickname: null,
+    location: null,
+    type: null,
+    // createdat timestamp
+    createdAt: Timestamp.now(),
+  };
+  return saveHomePageInfoToFirestore(hpi);
+}
 
 export const updateHomePageInfo = async (userId: string) => {
   const defaultChat = await getDefaultChatRecordFromFirestore(userId);
@@ -53,6 +70,10 @@ export const updateHomePageInfo = async (userId: string) => {
   const homePageInfoRef = await saveHomePageInfoToFirestore(
     mapChatCompletionMessageToHomePageInfo(gptResponseMessage, userId)
   );
-
   return homePageInfoRef;
+};
+
+
+export const updatePlantsNumber = async (userId: string, plantsNumber: number) => {
+  return updateHomePageInfoRecordWithPlantsNumber(userId, plantsNumber);
 };

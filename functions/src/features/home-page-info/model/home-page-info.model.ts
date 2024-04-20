@@ -5,6 +5,7 @@ import { LocationDetails } from "./location.model";
 import { UserGoals } from "./user-goal.model";
 
 export interface HomePageInfo {
+    id?: string;
     userId: string;
     createdAt: Timestamp;
     experience: ExperienceLevel | null;
@@ -12,4 +13,5 @@ export interface HomePageInfo {
     nickname: string | null;
     location: LocationDetails | null;
     type: GardenerTypes | null;
+    plantsCount: number;
 }

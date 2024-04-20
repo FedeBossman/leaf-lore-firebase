@@ -2,7 +2,7 @@ import { createGptJson } from "../../clients/openai-gpt.client";
 import { mapChatCompletionToJson, mapSystemRulesToChatCompletionSystemMessageParam } from "../../shared/openai-gpt.mapper";
 import { createPlantChat } from "../chats/chat.service";
 import { Plant } from "./plant.model";
-import { addPlantRecordToFirestore } from "./plant.repository";
+import { addPlantRecordToFirestore, getPlantsCountByUserId } from "./plant.repository";
 
 export const addPlantByName = async (userId: string, plantName: string) => {
   const systemRules = [
@@ -31,5 +31,9 @@ export const addPlantByName = async (userId: string, plantName: string) => {
 
   return ref;
 };
+
+export const getPlantsCount = async (userId: string) => {
+  return getPlantsCountByUserId(userId);
+}
 
 

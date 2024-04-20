@@ -46,7 +46,21 @@
         {
             "label": "Start Firebase Emulators (Inspect Functions)",
             "type": "shell",
-            "command": "source ~/.zshrc && firebase emulators:start --inspect-functions --import=./firebase-export/emulator",
+            "command": "source ~/.zshrc && firebase emulators:start --inspect-functions --import=./firebase-export",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Export Emulator data",
+            "type": "shell",
+            "command": "source ~/.zshrc && firebase emulators:export ./firebase-export ",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
