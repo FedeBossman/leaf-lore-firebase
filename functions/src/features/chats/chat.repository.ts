@@ -22,6 +22,7 @@ export const addDefaultChatRecordToFirestore = async (userId: string, name: stri
   return await db.collection(chatCollection).add({
     userId: userId,
     createdAt: timestamp,
+    updatedAt: timestamp,
     messages: messages,
     defaultChat: true,
     name: name,
@@ -33,6 +34,7 @@ export const addChatRecordToFirestore = async (userId: string, name: string, mes
   return await db.collection(chatCollection).add({
     userId: userId,
     createdAt: timestamp,
+    updatedAt: timestamp,
     messages: messages,
     defaultChat: false,
     name: name,
@@ -45,5 +47,6 @@ export const saveChatMessageToFirestore = async (chatId: string, message: ChatMe
     messages: FieldValue.arrayUnion(
       message
     ),
+    updatedAt: Timestamp.now(),
   });
 };

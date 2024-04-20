@@ -11,6 +11,7 @@ export interface ChatRecord {
   id?: string;
   userId: string;
   createdAt: Timestamp;
+  updatedAt: Timestamp;
   defaultChat: boolean;
   name: string;
   messages: ChatMessage[];
