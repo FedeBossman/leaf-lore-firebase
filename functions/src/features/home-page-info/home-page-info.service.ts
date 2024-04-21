@@ -5,7 +5,7 @@ import {
 } from "../chats/mappers/chat.mapper";
 import { ChatMessage } from "../chats/chat.model";
 import { getDefaultChatRecordFromFirestore } from "../chats/chat.repository";
-import { saveHomePageInfoToFirestore, updateHomePageInfoRecordWithPlantsNumber } from "./home-page-info.repository";
+import { getHomePageInfoRecordFromFirestore, saveHomePageInfoToFirestore, updateHomePageInfoRecordWithGptData, updateHomePageInfoRecordWithPlantsNumber, updateHomePageInfoRecordWithWeather } from "./home-page-info.repository";
 import { LocationType } from "./model/location.model";
 import { ExperienceLevel } from "./model/experience-level.model";
 import { GardenerTypes } from "./model/gardener-type.model";
@@ -13,6 +13,7 @@ import { UserGoals } from "./model/user-goal.model";
 import { mapSystemRulesToChatCompletionSystemMessageParam } from "../../shared/openai-gpt.mapper";
 import { Timestamp } from "firebase-admin/firestore";
 import { HomePageInfo } from "./model/home-page-info.model";
+import { getWeather } from "../../clients/open-weather-map.client";
 
 export const createInitialHpi = async (userId: string) => {
   const hpi: HomePageInfo = {
@@ -23,6 +24,7 @@ export const createInitialHpi = async (userId: string) => {
     nickname: null,
     location: null,
     type: null,
+    weather: null,
     // createdat timestamp
     createdAt: Timestamp.now(),
   };
@@ -67,8 +69,8 @@ export const updateHomePageInfo = async (userId: string) => {
   );
 
   const gptResponseMessage = gptResponse.choices[0].message;
-  const homePageInfoRef = await saveHomePageInfoToFirestore(
-    mapChatCompletionMessageToHomePageInfo(gptResponseMessage, userId)
+  const homePageInfoRef = await updateHomePageInfoRecordWithGptData(
+    userId, mapChatCompletionMessageToHomePageInfo(gptResponseMessage, userId)
   );
   return homePageInfoRef;
 };
@@ -76,4 +78,24 @@ export const updateHomePageInfo = async (userId: string) => {
 
 export const updatePlantsNumber = async (userId: string, plantsNumber: number) => {
   return updateHomePageInfoRecordWithPlantsNumber(userId, plantsNumber);
+};
+
+
+export const updateWeather = async (userId: string) => {
+  const hpi = await getHomePageInfoRecordFromFirestore(userId);
+  if (!hpi?.location?.city) {
+    console.warn('Unable to update weather data for',  userId, 'Location unknown');
+    return;
+  } 
+  if (hpi.weather?.updatedAt && hpi.weather?.updatedAt.toMillis() > Date.now() - 1000 * 60 * 60) {
+    console.log('Weather data for user', userId, 'is up to date');
+    return;
+  }
+  console.log('Updating weather for user', userId, 'For city:', hpi?.location?.city);
+  const weather = await getWeather(hpi?.location?.city);
+  if (!weather) {
+    console.warn('Unable to update weather data for',  userId, 'Weather not found');
+    return;
+  }
+  return updateHomePageInfoRecordWithWeather(userId, weather);
 };

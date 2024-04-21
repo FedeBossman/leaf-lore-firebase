@@ -3,6 +3,7 @@ import { ExperienceLevel } from "./experience-level.model";
 import { GardenerTypes } from "./gardener-type.model";
 import { LocationDetails } from "./location.model";
 import { UserGoals } from "./user-goal.model";
+import { Weather } from "./weather.model";
 
 export interface HomePageInfo {
     id?: string;
@@ -14,4 +15,5 @@ export interface HomePageInfo {
     location: LocationDetails | null;
     type: GardenerTypes | null;
     plantsCount: number;
+    weather: Weather | null;
 }
