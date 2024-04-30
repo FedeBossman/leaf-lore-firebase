@@ -3,6 +3,7 @@ import { CareLevel, SunlightRequirement, WateringFrequency, FertilizationFrequen
 
 export interface Plant extends UserOwned {
     name: string;
+    officialSpeciesName: string;
     nickname: string;
     startDate: Date;
     careLevel: CareLevel;

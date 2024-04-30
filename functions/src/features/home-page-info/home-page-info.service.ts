@@ -81,13 +81,13 @@ export const updatePlantsNumber = async (userId: string, plantsNumber: number) =
 };
 
 
-export const updateWeather = async (userId: string) => {
+export const updateWeather = async (userId: string, options?: {force?: boolean}) => {
   const hpi = await getHomePageInfoRecordFromFirestore(userId);
   if (!hpi?.location?.city) {
     console.warn('Unable to update weather data for',  userId, 'Location unknown');
     return;
   } 
-  if (hpi.weather?.updatedAt && hpi.weather?.updatedAt.toMillis() > Date.now() - 1000 * 60 * 60) {
+  if (!options?.force && hpi.weather?.updatedAt && hpi.weather?.updatedAt.toMillis() > Date.now() - 1000 * 60 * 60) {
     console.log('Weather data for user', userId, 'is up to date');
     return;
   }

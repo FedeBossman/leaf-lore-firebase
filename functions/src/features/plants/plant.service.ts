@@ -7,18 +7,18 @@ import { addPlantRecordToFirestore, getPlantsCountByUserId } from "./plant.repos
 export const addPlantByName = async (userId: string, plantName: string) => {
   const systemRules = [
     `Return a json object with plant information for the plant '${plantName}'`,
-    "Return all and only the following fields: name, nickname, careLevel, sunlightRequirement, wateringFrequency, fertilizationFrequency, soilType, potSize, humidityRequirement, notes",
+    "Return all and only the following fields: name, official species name, nickname, careLevel, sunlightRequirement, wateringFrequency, fertilizationFrequency, soilType, potSize, humidityRequirement, notes",
     "Do not return any false or unverified information, its preferred to return no information than to return false information",
     "The plant name should be the same as the plant name in the request",
     "To make an accurate decision, assume the user is a beginner gardener unless otherwise specified",
     "For example, if the plant can be small to big, assume the user will choose smaller to start",
-    "careLevel should be one of the following: 'low', 'medium', 'high'",
-    "sunlightRequirement should be one of the following: 'fullSun', 'partialShade', 'fullShade'",
-    "wateringFrequency should be one of the following: 'daily', 'weekly', 'biweekly', 'monthly'",
-    "fertilizationFrequency should be one of the following: 'weekly', 'monthly', 'quarterly', 'yearly'",
-    "soilType should be one of the following: 'loamy', 'sandy', 'clay', 'peaty', 'chalky'",
-    "potSize should be one of the following: 'small', 'medium', 'large', 'extraLarge'",
-    "humidityRequirement should be one of the following: 'low', 'medium', 'high'",
+    "careLevel must always be one of the following: 'low', 'medium', 'high'",
+    "sunlightRequirement must always be one of the following: 'fullSun', 'partialShade', 'fullShade'",
+    "wateringFrequency must always be one of the following: 'daily', 'weekly', 'biweekly', 'monthly'",
+    "fertilizationFrequency must always be one of the following: 'weekly', 'monthly', 'quarterly', 'yearly'",
+    "soilType must always be one of the following: 'loamy', 'sandy', 'clay', 'peaty', 'chalky', 'wellDraining'",
+    "potSize must always be one of the following: 'small', 'medium', 'large', 'extraLarge'",
+    "humidityRequirement must always be one of the following: 'low', 'medium', 'high'",
   ];
 
   const systemMessage = mapSystemRulesToChatCompletionSystemMessageParam(systemRules);

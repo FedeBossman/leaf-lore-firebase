@@ -33,7 +33,7 @@ exports.checkFieldUpdate = functions.firestore
       console.log(
         `Field 'location.city' changed from ${beforeData?.location.city} to ${afterData.location?.city}. Updating weather data.`
       );
-      updateWeather(afterData.userId);
+      updateWeather(afterData.userId, {force: true});
     }
   });
 
