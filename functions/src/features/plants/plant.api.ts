@@ -9,8 +9,7 @@ import { firestore, logger } from "firebase-functions";
 
 exports.updateHomepageOnNewPlant = firestore
   .document("plants/{plantId}")
-  .onCreate(async (snap, context) => {
-
+  .onCreate(async (snap, _) => {
     const newPlant: Plant = snap.data() as Plant;
     const userId = newPlant.userId;
 

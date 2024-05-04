@@ -18,7 +18,7 @@ export const addPlantByName = async (userId: string, plantName: string) => {
     "fertilizationFrequency must always be one of the following: 'weekly', 'monthly', 'quarterly', 'yearly'",
     "soilType must always be one of the following: 'loamy', 'sandy', 'clay', 'peaty', 'chalky', 'wellDraining'",
     "potSize must always be one of the following: 'small', 'medium', 'large', 'extraLarge'",
-    "humidityRequirement must always be one of the following: 'low', 'medium', 'high'",
+    "humidityRequirement must always be one of the following: 'low', 'medium', 'high'"
   ];
 
   const systemMessage = mapSystemRulesToChatCompletionSystemMessageParam(systemRules);
@@ -34,6 +34,6 @@ export const addPlantByName = async (userId: string, plantName: string) => {
 
 export const getPlantsCount = async (userId: string) => {
   return getPlantsCountByUserId(userId);
-}
+};
 
 

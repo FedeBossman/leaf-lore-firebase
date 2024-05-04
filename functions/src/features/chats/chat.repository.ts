@@ -15,7 +15,7 @@ export const getDefaultChatRecordFromFirestore = async (userId: string): Promise
     .where("userId", "==", userId)
     .where("defaultChat", "==", true)
     .get();
-}
+};
 
 export const addDefaultChatRecordToFirestore = async (userId: string, name: string, messages: ChatMessage[]) => {
   const timestamp = Timestamp.now();
@@ -25,7 +25,7 @@ export const addDefaultChatRecordToFirestore = async (userId: string, name: stri
     updatedAt: timestamp,
     messages: messages,
     defaultChat: true,
-    name: name,
+    name: name
   });
 };
 
@@ -37,7 +37,7 @@ export const addChatRecordToFirestore = async (userId: string, name: string, mes
     updatedAt: timestamp,
     messages: messages,
     defaultChat: false,
-    name: name,
+    name: name
   });
 };
 
@@ -47,6 +47,6 @@ export const saveChatMessageToFirestore = async (chatId: string, message: ChatMe
     messages: FieldValue.arrayUnion(
       message
     ),
-    updatedAt: Timestamp.now(),
+    updatedAt: Timestamp.now()
   });
 };

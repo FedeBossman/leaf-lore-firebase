@@ -1,18 +1,18 @@
-import {ChatCompletionMessage, ChatCompletionMessageParam} from "openai/resources";
-import {ChatMessage, ChatResponse} from "../chat.model";
-import {Timestamp} from "firebase-admin/firestore";
+import { ChatCompletionMessage, ChatCompletionMessageParam } from "openai/resources";
+import { ChatMessage, ChatResponse } from "../chat.model";
+import { Timestamp } from "firebase-admin/firestore";
 import { HomePageInfo } from "../../home-page-info/model/home-page-info.model";
 
 
 export const mapStringToUserChatMessage = (message: string): ChatMessage => ({
   role: "user",
   content: message,
-  timestamp: Timestamp.now(),
+  timestamp: Timestamp.now()
 });
 
 export const mapChatMessageToChatCompletionMessageParam = (message: ChatMessage): ChatCompletionMessageParam => ({
   role: message.role,
-  content: message.content,
+  content: message.content
 });
 
 export const mapChatCompletionMessageToChatMessage =
@@ -22,8 +22,8 @@ export const mapChatCompletionMessageToChatMessage =
   return {
     role: message.role,
     content: assistantResponse.userMessage?.trim() ?? "",
-    timestamp: Timestamp.now(),
-  }
+    timestamp: Timestamp.now()
+  };
 };
 
 export const mapChatCompletionMessageToHomePageInfo = (message: ChatCompletionMessage, userId: string): HomePageInfo => {

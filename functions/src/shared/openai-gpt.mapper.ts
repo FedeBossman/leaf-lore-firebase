@@ -8,6 +8,6 @@ export function mapChatCompletionToJson<T>(chatCompletion: ChatCompletion): T {
 export function mapSystemRulesToChatCompletionSystemMessageParam(systemRules: string[]): ChatCompletionSystemMessageParam {
   return {
     role: "system",
-    content: systemRules.join(". "),
+    content: systemRules.join(". ")
   };
 }

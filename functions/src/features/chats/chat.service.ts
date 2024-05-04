@@ -3,13 +3,13 @@ import { createGptJson } from "../../clients/openai-gpt.client";
 import {
   mapChatMessageToChatCompletionMessageParam,
   mapChatCompletionMessageToChatMessage,
-  mapStringToUserChatMessage,
+  mapStringToUserChatMessage
 } from "./mappers/chat.mapper";
 import { ChatMessage, ChatResponse } from "./chat.model";
 import {
   addChatRecordToFirestore,
   addDefaultChatRecordToFirestore,
-  saveChatMessageToFirestore,
+  saveChatMessageToFirestore
 } from "./chat.repository";
 import { ExperienceLevel } from "../home-page-info/model/experience-level.model";
 import { GardenerTypes } from "../home-page-info/model/gardener-type.model";
@@ -30,7 +30,7 @@ const generalSystemRules = [
   // "You can't provide unverified information",
   "You can't provide personal information",
   "Don't repeat yourself, expand on the information",
-  "You must be as helpful as possible regarding the user's requests and the information you have on plants",
+  "You must be as helpful as possible regarding the user's requests and the information you have on plants"
 ];
 
 export const createPlantChat = async (userId: string, plant: Plant) => {
@@ -41,7 +41,7 @@ export const createPlantChat = async (userId: string, plant: Plant) => {
     "You can only answer with information about your care",
     `You are a "${plant.name} plant"`,
     "Introduce yourself with info about how to care for you",
-    "This is the information the user has about you: " + JSON.stringify(plant, null, "  "),
+    "This is the information the user has about you: " + JSON.stringify(plant, null, "  ")
   ];
 
   // TODO: load plant information from firestore 'plant' collection
@@ -49,16 +49,16 @@ export const createPlantChat = async (userId: string, plant: Plant) => {
   const systemMessage: ChatMessage = {
     role: "system",
     content: systemRules.join(". "),
-    timestamp: Timestamp.now(),
+    timestamp: Timestamp.now()
   };
   const gptResponse = await createGptJson([
-    mapChatMessageToChatCompletionMessageParam(systemMessage),
+    mapChatMessageToChatCompletionMessageParam(systemMessage)
   ]);
   const gptResponseMessage = gptResponse.choices[0].message;
-  
+
   const chatRef = await addChatRecordToFirestore(userId, plant.name, [
     systemMessage,
-    mapChatCompletionMessageToChatMessage(gptResponseMessage),
+    mapChatCompletionMessageToChatMessage(gptResponseMessage)
   ]);
   return chatRef;
 };
@@ -91,15 +91,15 @@ export const createDefaultChat = async (userId: string) => {
   const systemMessage: ChatMessage = {
     role: "system",
     content: systemRules.join(". "),
-    timestamp: Timestamp.now(),
+    timestamp: Timestamp.now()
   };
   const gptResponse = await createGptJson([
-    mapChatMessageToChatCompletionMessageParam(systemMessage),
+    mapChatMessageToChatCompletionMessageParam(systemMessage)
   ]);
   const gptResponseMessage = gptResponse.choices[0].message;
   const chatRef = await addDefaultChatRecordToFirestore(userId, "Gardener", [
     systemMessage,
-    mapChatCompletionMessageToChatMessage(gptResponseMessage),
+    mapChatCompletionMessageToChatMessage(gptResponseMessage)
   ]);
 
   logger.info("Default chat created", "user", userId, "chatId", chatRef.id);
@@ -121,7 +121,7 @@ export const postMessageToChat = async (chatDoc: DocumentData, message: string) 
   messages.splice(1, 0, hpiIndicatorMessage);
   const gptResponse = await createGptJson([
     ...messages,
-    mapChatMessageToChatCompletionMessageParam(userMessage),
+    mapChatMessageToChatCompletionMessageParam(userMessage)
   ]);
 
   const newMessage = gptResponse.choices[0].message;
@@ -141,7 +141,7 @@ export const postMessageToChat = async (chatDoc: DocumentData, message: string) 
 
     addPlantByName(userId, plantName);
   }
-}
+};
 
 export const getHpiIndicatorMessage = async (userId: string): Promise<ChatCompletionMessageParam> => {
   const locationTypes = Object.values(LocationType).map((type) => `'${type}'`).join(", ");
@@ -156,11 +156,11 @@ export const getHpiIndicatorMessage = async (userId: string): Promise<ChatComple
     "'goals' values: " + goals,
     "'nickname' field will have a string value created based on the user's goals, experience, and location.",
     "'type' values: " + gardenerTypeNames,
-    "This is the current HPI data obtained, use this to trigger the 'isNewHPIAvailable' boolean if needed: " + JSON.stringify(homePageInfo, null, ''),
+    "This is the current HPI data obtained, use this to trigger the 'isNewHPIAvailable' boolean if needed: " + JSON.stringify(homePageInfo, null, "")
   ];
 
   return {
     role: "system",
     content: systemRules.join(". ")
   };
-}
+};

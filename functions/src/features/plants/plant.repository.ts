@@ -15,9 +15,9 @@ export const getPlantsCountByUserId = async (userId: string): Promise<number> =>
     .count();
 
   // Execute the count query
-  var result = await plantsRef.get();
+  const result = await plantsRef.get();
 
   // The count of documents is available in the `count` field of the result
-  const count = result.data()?.['count'] ?? 0;
+  const count = result.data()?.["count"] ?? 0;
   return count;
-}
+};

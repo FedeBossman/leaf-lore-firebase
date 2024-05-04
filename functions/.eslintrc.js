@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   env: {
     es6: true,
-    node: true,
+    node: true
   },
   extends: [
     "eslint:recommended",
@@ -10,25 +10,28 @@ module.exports = {
     "plugin:import/warnings",
     "plugin:import/typescript",
     "google",
-    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: ["tsconfig.json", "tsconfig.dev.json"],
-    sourceType: "module",
+    sourceType: "module"
   },
   ignorePatterns: [
-    "/lib/**/*", // Ignore built files.
+    "/lib/**/*" // Ignore built files.
   ],
   plugins: [
     "@typescript-eslint",
-    "import",
+    "import"
   ],
   rules: {
+    "comma-dangle": ["error", "never"],
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,
     "indent": ["error", 2],
-    "max-len": ["error", {"code": 160, "tabWidth": 2, "ignoreUrls": true}],
-    "require-jsdoc": "off", // This disables the require-jsdoc rule
-  },
+    "max-len": ["error", { "code": 160, "tabWidth": 2, "ignoreUrls": true }],
+    "prettier/prettier": ["error", { "printWidth": 160 }],
+    "object-curly-spacing": ["error", "always"],
+    "require-jsdoc": "off" // This disables the require-jsdoc rule
+  }
 };

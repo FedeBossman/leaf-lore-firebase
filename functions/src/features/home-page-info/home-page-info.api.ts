@@ -2,7 +2,7 @@ import { onCall } from "firebase-functions/v2/https";
 import {
   createInitialHpi,
   updateHomePageInfo,
-  updateWeather,
+  updateWeather
 } from "./home-page-info.service";
 import { getHomePageInfoRecordFromFirestore } from "./home-page-info.repository";
 import { withMiddleware } from "../../shared/middleware/middleware";

@@ -15,5 +15,4 @@ export interface Plant extends UserOwned {
     humidityRequirement: HumidityRequirement;
     notes?: string;
 }
-  
-  
+

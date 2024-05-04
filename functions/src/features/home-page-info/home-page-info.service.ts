@@ -1,7 +1,7 @@
 import { createGptJson } from "../../clients/openai-gpt.client";
 import {
   mapChatMessageToChatCompletionMessageParam,
-  mapChatCompletionMessageToHomePageInfo,
+  mapChatCompletionMessageToHomePageInfo
 } from "../chats/mappers/chat.mapper";
 import { ChatMessage } from "../chats/chat.model";
 import { getDefaultChatRecordFromFirestore } from "../chats/chat.repository";
@@ -26,10 +26,10 @@ export const createInitialHpi = async (userId: string) => {
     type: null,
     weather: null,
     // createdat timestamp
-    createdAt: Timestamp.now(),
+    createdAt: Timestamp.now()
   };
   return saveHomePageInfoToFirestore(hpi);
-}
+};
 
 export const updateHomePageInfo = async (userId: string) => {
   const defaultChat = await getDefaultChatRecordFromFirestore(userId);
@@ -59,7 +59,7 @@ export const updateHomePageInfo = async (userId: string) => {
     "'goals' field will have a list of the following values: " + goals,
     "'nickname' field will have a string value created based on the user's goals, experience, and location. No need to use all or explicit, but it needs to have a sense of representation and it has to be a couple words like 'Budding Botanist'",
     "'type' field will have a string value based on one of the following values: " +
-      gardenerTypeNames,
+      gardenerTypeNames
   ];
 
   const systemMessage = mapSystemRulesToChatCompletionSystemMessageParam(systemRules);
@@ -84,17 +84,17 @@ export const updatePlantsNumber = async (userId: string, plantsNumber: number) =
 export const updateWeather = async (userId: string, options?: {force?: boolean}) => {
   const hpi = await getHomePageInfoRecordFromFirestore(userId);
   if (!hpi?.location?.city) {
-    console.warn('Unable to update weather data for',  userId, 'Location unknown');
-    return;
-  } 
-  if (!options?.force && hpi.weather?.updatedAt && hpi.weather?.updatedAt.toMillis() > Date.now() - 1000 * 60 * 60) {
-    console.log('Weather data for user', userId, 'is up to date');
+    console.warn("Unable to update weather data for", userId, "Location unknown");
     return;
   }
-  console.log('Updating weather for user', userId, 'For city:', hpi?.location?.city);
+  if (!options?.force && hpi.weather?.updatedAt && hpi.weather?.updatedAt.toMillis() > Date.now() - 1000 * 60 * 60) {
+    console.log("Weather data for user", userId, "is up to date");
+    return;
+  }
+  console.log("Updating weather for user", userId, "For city:", hpi?.location?.city);
   const weather = await getWeather(hpi?.location?.city);
   if (!weather) {
-    console.warn('Unable to update weather data for',  userId, 'Weather not found');
+    console.warn("Unable to update weather data for", userId, "Weather not found");
     return;
   }
   return updateHomePageInfoRecordWithWeather(userId, weather);
