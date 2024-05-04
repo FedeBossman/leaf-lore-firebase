@@ -1,5 +1,4 @@
 import { onCall } from "firebase-functions/v2/https";
-import * as functions from "firebase-functions";
 import {
   createInitialHpi,
   updateHomePageInfo,
@@ -9,9 +8,13 @@ import { getHomePageInfoRecordFromFirestore } from "./home-page-info.repository"
 import { withMiddleware } from "../../shared/middleware/middleware";
 import { authenticate } from "../../shared/middleware/auth.middleware";
 import { user } from "firebase-functions/v1/auth";
+import { logger, firestore } from "firebase-functions";
 
 exports.createInitialHomePageInfo = user().onCreate(async (user) => {
   const userId = user.uid;
+
+  logger.info("New user detected. Creating home page info", userId);
+
   const hpi = await getHomePageInfoRecordFromFirestore(userId);
   if (!hpi) {
     const hpiRef = await createInitialHpi(userId);
@@ -21,19 +24,16 @@ exports.createInitialHomePageInfo = user().onCreate(async (user) => {
   }
 });
 
-exports.checkFieldUpdate = functions.firestore
+exports.checkFieldUpdate = firestore
   .document("homePageInfo/{docId}")
   .onWrite((change, context) => {
     const beforeData = change.before.data();
     const afterData = change.after.data();
-    if (
-      afterData &&
-      beforeData?.location?.city !== afterData.location?.city
-    ) {
-      console.log(
+    if (afterData && beforeData?.location?.city !== afterData.location?.city) {
+      logger.info(
         `Field 'location.city' changed from ${beforeData?.location.city} to ${afterData.location?.city}. Updating weather data.`
       );
-      updateWeather(afterData.userId, {force: true});
+      updateWeather(afterData.userId, { force: true });
     }
   });
 
@@ -52,6 +52,8 @@ exports.getHomePageInfo = onCall(
 exports.updateWeather = onCall(
   withMiddleware([authenticate], async ({ auth }) => {
     const userId = auth!.uid;
+
+    logger.info("Update weather called.", userId);
 
     await updateWeather(userId);
   })

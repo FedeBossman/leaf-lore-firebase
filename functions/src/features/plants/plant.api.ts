@@ -4,14 +4,17 @@ import { withMiddleware } from "../../shared/middleware/middleware";
 import { authenticate } from "../../shared/middleware/auth.middleware";
 import { addPlantByName, getPlantsCount } from "./plant.service";
 import { AddPlantDto } from "./plant.dto";
-import * as functions from "firebase-functions";
 import { updatePlantsNumber } from "../home-page-info/home-page-info.service";
+import { firestore, logger } from "firebase-functions";
 
-exports.updateHomepageOnNewPlant = functions.firestore
+exports.updateHomepageOnNewPlant = firestore
   .document("plants/{plantId}")
   .onCreate(async (snap, context) => {
+
     const newPlant: Plant = snap.data() as Plant;
     const userId = newPlant.userId;
+
+    logger.info("New plant detected. Creating updating home page with plants count.", "User:", newPlant.userId, "Plant:", snap.id);
 
     const plantsCount = await getPlantsCount(userId);
 

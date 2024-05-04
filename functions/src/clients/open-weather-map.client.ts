@@ -1,9 +1,11 @@
 import axios from "axios";
-import * as functions from "firebase-functions";
 import { Weather } from "../features/home-page-info/model/weather.model";
+// import { defineSecret } from "firebase-functions/params";
+
+// const openweathermapKey = defineSecret('OPENWEATHERMAP_KEY');
 
 export async function getWeather(cityName: string): Promise<Weather|undefined> {
-  const apiKey: string = functions.config().openweathermap.key; // Replace this with your API Key
+  const apiKey: string = process.env.OPENWEATHERMAP_KEY!; // openweathermapKey.value();
   const url: string = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`;
 
   let weather;
