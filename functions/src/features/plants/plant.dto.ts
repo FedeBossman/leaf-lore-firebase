@@ -1,3 +1,3 @@
 export interface AddPlantDto {
-    name: string;
+  name: string;
 }

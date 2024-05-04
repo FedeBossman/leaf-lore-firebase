@@ -7,12 +7,8 @@ export const addPlantRecordToFirestore = async (plant: Plant) => {
   return await db.collection(plantsCollection).add(plant);
 };
 
-
 export const getPlantsCountByUserId = async (userId: string): Promise<number> => {
-  const plantsRef = db
-    .collection(plantsCollection)
-    .where("userId", "==", userId)
-    .count();
+  const plantsRef = db.collection(plantsCollection).where("userId", "==", userId).count();
 
   // Execute the count query
   const result = await plantsRef.get();

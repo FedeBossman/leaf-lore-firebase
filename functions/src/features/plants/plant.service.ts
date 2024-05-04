@@ -5,6 +5,7 @@ import { Plant } from "./plant.model";
 import { addPlantRecordToFirestore, getPlantsCountByUserId } from "./plant.repository";
 
 export const addPlantByName = async (userId: string, plantName: string) => {
+  /* eslint-disable max-len */
   const systemRules = [
     `Return a json object with plant information for the plant '${plantName}'`,
     "Return all and only the following fields: name, official species name, nickname, careLevel, sunlightRequirement, wateringFrequency, fertilizationFrequency, soilType, potSize, humidityRequirement, notes",
@@ -20,6 +21,7 @@ export const addPlantByName = async (userId: string, plantName: string) => {
     "potSize must always be one of the following: 'small', 'medium', 'large', 'extraLarge'",
     "humidityRequirement must always be one of the following: 'low', 'medium', 'high'"
   ];
+  /* eslint-disable max-len */
 
   const systemMessage = mapSystemRulesToChatCompletionSystemMessageParam(systemRules);
   const gptResponse = await createGptJson([systemMessage]);
@@ -35,5 +37,3 @@ export const addPlantByName = async (userId: string, plantName: string) => {
 export const getPlantsCount = async (userId: string) => {
   return getPlantsCountByUserId(userId);
 };
-
-

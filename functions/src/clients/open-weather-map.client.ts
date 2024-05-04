@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Weather } from "../features/home-page-info/model/weather.model";
 
-export async function getWeather(cityName: string): Promise<Weather|undefined> {
+export async function getWeather(cityName: string): Promise<Weather | undefined> {
   const apiKey: string = process.env.OPENWEATHERMAP_KEY ?? ""; // openweathermapKey.value();
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`;
 

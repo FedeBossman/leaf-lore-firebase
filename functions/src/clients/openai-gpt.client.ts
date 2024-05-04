@@ -27,7 +27,6 @@ export const createGptMessage = async (messages: ChatCompletionMessageParam[], m
   return gptResponse;
 };
 
-
 export const createGptJson = async (messages: ChatCompletionMessageParam[], maxTokens = 1000): Promise<ChatCompletion> => {
   logger.info("Calling GPT", "model", openAiModel);
 
@@ -42,4 +41,3 @@ export const createGptJson = async (messages: ChatCompletionMessageParam[], maxT
 
   return gptResponse;
 };
-

@@ -5,12 +5,12 @@ import { Tip, TipCategory } from "./tip.model";
 import { addTipToFirestore, getDailyTips, getSeasonalTips } from "./tip.repository";
 import { mapSystemRulesToChatCompletionSystemMessageParam } from "../../shared/openai-gpt.mapper";
 
-
 export const createDailyTip = async (userId: string): Promise<Tip> => {
   const tips = await getDailyTips(userId);
-  const previousTips = tips.length === 0 ?
-    "This is the first tip given to the user" :
-    "These tips were previously given to the user: [" + tips.map((tip) => "\"" + tip.tip + "\"").join(", ") + "]";
+  const previousTips =
+    tips.length === 0
+      ? "This is the first tip given to the user"
+      : "These tips were previously given to the user: [" + tips.map((tip) => `"` + tip.tip + `"`).join(", ") + "]";
 
   const systemRules = [
     "Give the user a gardening tip, adapting to the information known about them, and the date",
@@ -18,17 +18,14 @@ export const createDailyTip = async (userId: string): Promise<Tip> => {
     previousTips,
     "Don't answer with more than 50 words (300 characters), the tip should be quick and easy to understand",
     "Ensure the tip is actionable",
-    "Don't say things like \"here's a tip\", \"my tip is\" or \"As a blabla user\", just give the tip",
+    `Don't say things like "here's a tip", "my tip is" or "As a blabla user", just give the tip`,
     "The current date (mm/dd/yyyy) is " + new Date().toLocaleDateString()
   ];
 
   const systemMessage = mapSystemRulesToChatCompletionSystemMessageParam(systemRules);
 
   const hpiIndicatorMessage = await getHpiIndicatorMessage(userId);
-  const gptResponse = await createGptMessage([
-    systemMessage,
-    hpiIndicatorMessage
-  ]);
+  const gptResponse = await createGptMessage([systemMessage, hpiIndicatorMessage]);
 
   const dailyTip: Tip = {
     userId: userId,
@@ -41,12 +38,12 @@ export const createDailyTip = async (userId: string): Promise<Tip> => {
   return dailyTip;
 };
 
-
 export const createSeasonalTip = async (userId: string): Promise<Tip> => {
   const tips = await getSeasonalTips(userId);
-  const previousTips = tips.length === 0 ?
-    "This is the first seasonal tip given to the user" :
-    "These tips were previously given to the user: [" + tips.map((tip) => "\"" + tip.tip + "\"").join(", ") + "]";
+  const previousTips =
+    tips.length === 0
+      ? "This is the first seasonal tip given to the user"
+      : "These tips were previously given to the user: [" + tips.map((tip) => `"` + tip.tip + `"`).join(", ") + "]";
 
   const systemRules = [
     "Give the user a seasonal gardening tip, adapting to the information known about them, and the current season of the year",
@@ -54,17 +51,14 @@ export const createSeasonalTip = async (userId: string): Promise<Tip> => {
     previousTips,
     "Don't answer with more than 50 words (300 characters), the tip should be quick and easy to understand",
     "Consider local gardening events, holidays, and traditional planting or harvesting times",
-    "Don't say things like \"here's a tip\", \"my tip is\" or \"As a blabla user\", just give the tip",
+    `Don't say things like "here's a tip", "my tip is" or "As a blabla user", just give the tip`,
     "The current date (mm/dd/yyyy)  is " + new Date().toLocaleDateString()
   ];
 
   const systemMessage = mapSystemRulesToChatCompletionSystemMessageParam(systemRules);
 
   const hpiIndicatorMessage = await getHpiIndicatorMessage(userId);
-  const gptResponse = await createGptMessage([
-    systemMessage,
-    hpiIndicatorMessage
-  ]);
+  const gptResponse = await createGptMessage([systemMessage, hpiIndicatorMessage]);
 
   const tip: Tip = {
     userId: userId,
@@ -76,7 +70,6 @@ export const createSeasonalTip = async (userId: string): Promise<Tip> => {
   await addTipToFirestore(tip);
   return tip;
 };
-
 
 // Seasonal tips
 // Consider local gardening events, holidays, and traditional planting or harvesting times in your seasonal tips.

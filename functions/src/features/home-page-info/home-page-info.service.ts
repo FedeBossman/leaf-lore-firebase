@@ -1,11 +1,14 @@
 import { createGptJson } from "../../clients/openai-gpt.client";
-import {
-  mapChatMessageToChatCompletionMessageParam,
-  mapChatCompletionMessageToHomePageInfo
-} from "../chats/mappers/chat.mapper";
+import { mapChatMessageToChatCompletionMessageParam, mapChatCompletionMessageToHomePageInfo } from "../chats/mappers/chat.mapper";
 import { ChatMessage } from "../chats/chat.model";
 import { getDefaultChatRecordFromFirestore } from "../chats/chat.repository";
-import { getHomePageInfoRecordFromFirestore, saveHomePageInfoToFirestore, updateHomePageInfoRecordWithGptData, updateHomePageInfoRecordWithPlantsNumber, updateHomePageInfoRecordWithWeather } from "./home-page-info.repository";
+import {
+  getHomePageInfoRecordFromFirestore,
+  saveHomePageInfoToFirestore,
+  updateHomePageInfoRecordWithGptData,
+  updateHomePageInfoRecordWithPlantsNumber,
+  updateHomePageInfoRecordWithWeather
+} from "./home-page-info.repository";
 import { LocationType } from "./model/location.model";
 import { ExperienceLevel } from "./model/experience-level.model";
 import { GardenerTypes } from "./model/gardener-type.model";
@@ -42,14 +45,22 @@ export const updateHomePageInfo = async (userId: string) => {
 
   const messages: ChatMessage[] = chatRef
     .data()
-    ?.messages
-    .filter((message: ChatMessage) => message.role !== "system")
+    ?.messages.filter((message: ChatMessage) => message.role !== "system")
     .map(mapChatMessageToChatCompletionMessageParam);
 
-  const locationTypes = Object.values(LocationType).map((type) => `'${type}'`).join(", ");
-  const gardenerTypeNames = Object.values(GardenerTypes).map((name) => `'${name}'`).join(", ");
-  const experienceLevelNames = Object.values(ExperienceLevel).map((level) => `'${level}'`).join(", ");
-  const goals = Object.values(UserGoals).map((goal) => `'${goal}'`).join(", ");
+  const locationTypes = Object.values(LocationType)
+    .map((type) => `'${type}'`)
+    .join(", ");
+  const gardenerTypeNames = Object.values(GardenerTypes)
+    .map((name) => `'${name}'`)
+    .join(", ");
+  const experienceLevelNames = Object.values(ExperienceLevel)
+    .map((level) => `'${level}'`)
+    .join(", ");
+  const goals = Object.values(UserGoals)
+    .map((goal) => `'${goal}'`)
+    .join(", ");
+  /* eslint-disable max-len */
   const systemRules = [
     "Given a user's responses about their plant care knowledge and activities return a json object with the following fields: 'experience', 'goals', 'nickname', 'location', 'type' as you start discovering that information",
     "'experience' is one of the following values: " + experienceLevelNames,
@@ -58,30 +69,23 @@ export const updateHomePageInfo = async (userId: string) => {
     "'location' field will have the following fields: 'city', 'state', 'country', 'type' (" + locationTypes + ")",
     "'goals' field will have a list of the following values: " + goals,
     "'nickname' field will have a string value created based on the user's goals, experience, and location. No need to use all or explicit, but it needs to have a sense of representation and it has to be a couple words like 'Budding Botanist'",
-    "'type' field will have a string value based on one of the following values: " +
-      gardenerTypeNames
+    "'type' field will have a string value based on one of the following values: " + gardenerTypeNames
   ];
+  /* eslint-disable max-len */
 
   const systemMessage = mapSystemRulesToChatCompletionSystemMessageParam(systemRules);
-  const gptResponse = await createGptJson(
-    [systemMessage, ...messages],
-    500
-  );
+  const gptResponse = await createGptJson([systemMessage, ...messages], 500);
 
   const gptResponseMessage = gptResponse.choices[0].message;
-  const homePageInfoRef = await updateHomePageInfoRecordWithGptData(
-    userId, mapChatCompletionMessageToHomePageInfo(gptResponseMessage, userId)
-  );
+  const homePageInfoRef = await updateHomePageInfoRecordWithGptData(userId, mapChatCompletionMessageToHomePageInfo(gptResponseMessage, userId));
   return homePageInfoRef;
 };
-
 
 export const updatePlantsNumber = async (userId: string, plantsNumber: number) => {
   return updateHomePageInfoRecordWithPlantsNumber(userId, plantsNumber);
 };
 
-
-export const updateWeather = async (userId: string, options?: {force?: boolean}) => {
+export const updateWeather = async (userId: string, options?: { force?: boolean }) => {
   const hpi = await getHomePageInfoRecordFromFirestore(userId);
   if (!hpi?.location?.city) {
     console.warn("Unable to update weather data for", userId, "Location unknown");

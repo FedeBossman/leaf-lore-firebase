@@ -3,15 +3,7 @@ export const getStartOfDay = (date: Date): Date => {
 };
 
 export const getEndOfDay = (date: Date): Date => {
-  return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-    23,
-    59,
-    59,
-    999
-  );
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
 };
 
 export const getStartOfSeason = (currentDate: Date): Date => {

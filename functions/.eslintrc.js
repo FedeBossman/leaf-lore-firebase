@@ -10,7 +10,8 @@ module.exports = {
     "plugin:import/warnings",
     "plugin:import/typescript",
     "google",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "eslint-config-prettier"
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -20,17 +21,14 @@ module.exports = {
   ignorePatterns: [
     "/lib/**/*" // Ignore built files.
   ],
-  plugins: [
-    "@typescript-eslint",
-    "import"
-  ],
+  plugins: ["@typescript-eslint", "import", "prettier"],
   rules: {
     "comma-dangle": ["error", "never"],
-    "quotes": ["error", "double"],
+    quotes: ["error", "double", { allowTemplateLiterals: true }],
     "import/no-unresolved": 0,
-    "indent": ["error", 2],
-    "max-len": ["error", { "code": 160, "tabWidth": 2, "ignoreUrls": true }],
-    "prettier/prettier": ["error", { "printWidth": 160 }],
+    indent: ["error", 2],
+    "max-len": ["error", { code: 160, tabWidth: 2, ignoreUrls: true }],
+    "prettier/prettier": ["error", { printWidth: 160, singleQuote: false, tabWidth: 2, useTabs: false, semi: true, trailingComma: "none" }],
     "object-curly-spacing": ["error", "always"],
     "require-jsdoc": "off" // This disables the require-jsdoc rule
   }

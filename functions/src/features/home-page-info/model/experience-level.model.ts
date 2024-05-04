@@ -1,23 +1,19 @@
 export type ExperienceLevelDetails = {
-    description: string;
-    focus: string[];
+  description: string;
+  focus: string[];
 };
 
 export enum ExperienceLevel {
-    Beginner = "Beginner",
-    Intermediate = "Intermediate",
-    Advanced = "Advanced",
-    Expert = "Expert"
+  Beginner = "Beginner",
+  Intermediate = "Intermediate",
+  Advanced = "Advanced",
+  Expert = "Expert"
 }
 
 export const experienceLevels: Record<ExperienceLevel, ExperienceLevelDetails> = {
   [ExperienceLevel.Beginner]: {
     description: "Users with little to no prior knowledge about plant care.",
-    focus: [
-      "Basic care tips",
-      "Foundational knowledge about plant types",
-      "Simple guides on watering and sunlight needs"
-    ]
+    focus: ["Basic care tips", "Foundational knowledge about plant types", "Simple guides on watering and sunlight needs"]
   },
   [ExperienceLevel.Intermediate]: {
     description: "Users with some experience, comfortable with basic care routines but looking to expand their knowledge.",

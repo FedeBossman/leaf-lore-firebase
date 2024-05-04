@@ -6,14 +6,14 @@ import { UserGoals } from "./user-goal.model";
 import { Weather } from "./weather.model";
 
 export interface HomePageInfo {
-    id?: string;
-    userId: string;
-    createdAt: Timestamp;
-    experience: ExperienceLevel | null;
-    goals: UserGoals[];
-    nickname: string | null;
-    location: LocationDetails | null;
-    type: GardenerTypes | null;
-    plantsCount: number;
-    weather: Weather | null;
+  id?: string;
+  userId: string;
+  createdAt: Timestamp;
+  experience: ExperienceLevel | null;
+  goals: UserGoals[];
+  nickname: string | null;
+  location: LocationDetails | null;
+  type: GardenerTypes | null;
+  plantsCount: number;
+  weather: Weather | null;
 }

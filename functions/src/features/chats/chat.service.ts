@@ -1,16 +1,8 @@
 import { DocumentData, Timestamp } from "firebase-admin/firestore";
 import { createGptJson } from "../../clients/openai-gpt.client";
-import {
-  mapChatMessageToChatCompletionMessageParam,
-  mapChatCompletionMessageToChatMessage,
-  mapStringToUserChatMessage
-} from "./mappers/chat.mapper";
+import { mapChatMessageToChatCompletionMessageParam, mapChatCompletionMessageToChatMessage, mapStringToUserChatMessage } from "./mappers/chat.mapper";
 import { ChatMessage, ChatResponse } from "./chat.model";
-import {
-  addChatRecordToFirestore,
-  addDefaultChatRecordToFirestore,
-  saveChatMessageToFirestore
-} from "./chat.repository";
+import { addChatRecordToFirestore, addDefaultChatRecordToFirestore, saveChatMessageToFirestore } from "./chat.repository";
 import { ExperienceLevel } from "../home-page-info/model/experience-level.model";
 import { GardenerTypes } from "../home-page-info/model/gardener-type.model";
 import { LocationType } from "../home-page-info/model/location.model";
@@ -51,21 +43,17 @@ export const createPlantChat = async (userId: string, plant: Plant) => {
     content: systemRules.join(". "),
     timestamp: Timestamp.now()
   };
-  const gptResponse = await createGptJson([
-    mapChatMessageToChatCompletionMessageParam(systemMessage)
-  ]);
+  const gptResponse = await createGptJson([mapChatMessageToChatCompletionMessageParam(systemMessage)]);
   const gptResponseMessage = gptResponse.choices[0].message;
 
-  const chatRef = await addChatRecordToFirestore(userId, plant.name, [
-    systemMessage,
-    mapChatCompletionMessageToChatMessage(gptResponseMessage)
-  ]);
+  const chatRef = await addChatRecordToFirestore(userId, plant.name, [systemMessage, mapChatCompletionMessageToChatMessage(gptResponseMessage)]);
   return chatRef;
 };
 
 export const createDefaultChat = async (userId: string) => {
   logger.info("Creating default chat", "user", userId);
 
+  /* eslint-disable max-len */
   const systemRules = [
     ...generalSystemRules,
     "HPI is information that is relevant to the Home Page Info",
@@ -88,19 +76,16 @@ export const createDefaultChat = async (userId: string) => {
     "Challenge their experience level, use quizzes to test their knowledge",
     "Try to continue the conversation in multiple messages, like for example quiz them one question at a time"
   ];
+  /* eslint-disable max-len */
+
   const systemMessage: ChatMessage = {
     role: "system",
     content: systemRules.join(". "),
     timestamp: Timestamp.now()
   };
-  const gptResponse = await createGptJson([
-    mapChatMessageToChatCompletionMessageParam(systemMessage)
-  ]);
+  const gptResponse = await createGptJson([mapChatMessageToChatCompletionMessageParam(systemMessage)]);
   const gptResponseMessage = gptResponse.choices[0].message;
-  const chatRef = await addDefaultChatRecordToFirestore(userId, "Gardener", [
-    systemMessage,
-    mapChatCompletionMessageToChatMessage(gptResponseMessage)
-  ]);
+  const chatRef = await addDefaultChatRecordToFirestore(userId, "Gardener", [systemMessage, mapChatCompletionMessageToChatMessage(gptResponseMessage)]);
 
   logger.info("Default chat created", "user", userId, "chatId", chatRef.id);
   return chatRef;
@@ -112,17 +97,13 @@ export const postMessageToChat = async (chatDoc: DocumentData, message: string) 
 
   logger.info("Adding new message", "user", userId, "chatId", chatId);
 
-
   const userMessage = mapStringToUserChatMessage(message);
   await saveChatMessageToFirestore(chatId, userMessage);
 
   const messages: ChatCompletionMessageParam[] = chatDoc.data()?.messages.map(mapChatMessageToChatCompletionMessageParam);
   const hpiIndicatorMessage = await getHpiIndicatorMessage(userId);
   messages.splice(1, 0, hpiIndicatorMessage);
-  const gptResponse = await createGptJson([
-    ...messages,
-    mapChatMessageToChatCompletionMessageParam(userMessage)
-  ]);
+  const gptResponse = await createGptJson([...messages, mapChatMessageToChatCompletionMessageParam(userMessage)]);
 
   const newMessage = gptResponse.choices[0].message;
 
@@ -144,10 +125,18 @@ export const postMessageToChat = async (chatDoc: DocumentData, message: string) 
 };
 
 export const getHpiIndicatorMessage = async (userId: string): Promise<ChatCompletionMessageParam> => {
-  const locationTypes = Object.values(LocationType).map((type) => `'${type}'`).join(", ");
-  const gardenerTypeNames = Object.values(GardenerTypes).map((name) => `'${name}'`).join(", ");
-  const experienceLevelNames = Object.values(ExperienceLevel).map((level) => `'${level}'`).join(", ");
-  const goals = Object.values(UserGoals).map((goal) => `'${goal}'`).join(", ");
+  const locationTypes = Object.values(LocationType)
+    .map((type) => `'${type}'`)
+    .join(", ");
+  const gardenerTypeNames = Object.values(GardenerTypes)
+    .map((name) => `'${name}'`)
+    .join(", ");
+  const experienceLevelNames = Object.values(ExperienceLevel)
+    .map((level) => `'${level}'`)
+    .join(", ");
+  const goals = Object.values(UserGoals)
+    .map((goal) => `'${goal}'`)
+    .join(", ");
   const homePageInfo = await getHomePageInfoRecordFromFirestore(userId);
 
   const systemRules = [

@@ -3,7 +3,6 @@ import { ChatMessage, ChatResponse } from "../chat.model";
 import { Timestamp } from "firebase-admin/firestore";
 import { HomePageInfo } from "../../home-page-info/model/home-page-info.model";
 
-
 export const mapStringToUserChatMessage = (message: string): ChatMessage => ({
   role: "user",
   content: message,
@@ -15,8 +14,7 @@ export const mapChatMessageToChatCompletionMessageParam = (message: ChatMessage)
   content: message.content
 });
 
-export const mapChatCompletionMessageToChatMessage =
-(message: ChatCompletionMessage): ChatMessage => {
+export const mapChatCompletionMessageToChatMessage = (message: ChatCompletionMessage): ChatMessage => {
   const assistantResponse: ChatResponse = JSON.parse(message.content ?? "{}");
 
   return {

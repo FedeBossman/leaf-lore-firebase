@@ -6,22 +6,20 @@ import { getEndOfDay, getEndOfSeason, getStartOfDay, getStartOfSeason } from "..
 const tipsCollection = "tips";
 
 export const getDailyTips = async (userId: string): Promise<Tip[]> => {
-  const query = db.collection(tipsCollection)
-    .where("userId", "==", userId)
-    .where("category", "==", TipCategory.DAILY)
-    .limit(10);
+  const query = db.collection(tipsCollection).where("userId", "==", userId).where("category", "==", TipCategory.DAILY).limit(10);
 
   const dailyTipsSnapshot = await query.get();
 
   return dailyTipsSnapshot.docs.map((doc) => doc.data() as Tip);
 };
 
-export const getDailyTip = async (userId: string): Promise<Tip|null> => {
+export const getDailyTip = async (userId: string): Promise<Tip | null> => {
   const today = new Date();
   const startOfToday = getStartOfDay(today);
   const endOfToday = getEndOfDay(today);
 
-  const query = db.collection(tipsCollection)
+  const query = db
+    .collection(tipsCollection)
     .where("userId", "==", userId)
     .where("category", "==", TipCategory.DAILY)
     .where("createdAt", ">=", Timestamp.fromDate(startOfToday))
@@ -38,22 +36,20 @@ export const getDailyTip = async (userId: string): Promise<Tip|null> => {
 };
 
 export const getSeasonalTips = async (userId: string): Promise<Tip[]> => {
-  const query = db.collection(tipsCollection)
-    .where("userId", "==", userId)
-    .where("category", "==", TipCategory.SEASONAL)
-    .limit(10);
+  const query = db.collection(tipsCollection).where("userId", "==", userId).where("category", "==", TipCategory.SEASONAL).limit(10);
 
   const dailyTipsSnapshot = await query.get();
 
   return dailyTipsSnapshot.docs.map((doc) => doc.data() as Tip);
 };
 
-export const getSeasonalTip = async (userId: string): Promise<Tip|null> => {
+export const getSeasonalTip = async (userId: string): Promise<Tip | null> => {
   const currentDate = new Date();
   const startOfSeason: Date = getStartOfSeason(currentDate);
   const endOfSeason: Date = getEndOfSeason(currentDate);
 
-  const query = db.collection(tipsCollection)
+  const query = db
+    .collection(tipsCollection)
     .where("userId", "==", userId)
     .where("category", "==", TipCategory.SEASONAL)
     .where("createdAt", ">=", Timestamp.fromDate(startOfSeason))

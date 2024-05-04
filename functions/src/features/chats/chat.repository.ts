@@ -2,7 +2,6 @@ import { DocumentData, DocumentSnapshot, FieldValue, QuerySnapshot, Timestamp } 
 import { ChatMessage } from "./chat.model";
 import { db } from "../../shared/firestoreConnection";
 
-
 const chatCollection = "chats";
 
 export const getChatRecordFromFirestore = async (chatId: string): Promise<DocumentSnapshot<DocumentData>> => {
@@ -11,10 +10,7 @@ export const getChatRecordFromFirestore = async (chatId: string): Promise<Docume
 };
 
 export const getDefaultChatRecordFromFirestore = async (userId: string): Promise<QuerySnapshot<DocumentData>> => {
-  return db.collection(chatCollection)
-    .where("userId", "==", userId)
-    .where("defaultChat", "==", true)
-    .get();
+  return db.collection(chatCollection).where("userId", "==", userId).where("defaultChat", "==", true).get();
 };
 
 export const addDefaultChatRecordToFirestore = async (userId: string, name: string, messages: ChatMessage[]) => {
@@ -44,9 +40,7 @@ export const addChatRecordToFirestore = async (userId: string, name: string, mes
 export const saveChatMessageToFirestore = async (chatId: string, message: ChatMessage) => {
   const chatRef = db.collection(chatCollection).doc(chatId);
   return chatRef.update({
-    messages: FieldValue.arrayUnion(
-      message
-    ),
+    messages: FieldValue.arrayUnion(message),
     updatedAt: Timestamp.now()
   });
 };

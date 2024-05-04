@@ -7,18 +7,16 @@ import { AddPlantDto } from "./plant.dto";
 import { updatePlantsNumber } from "../home-page-info/home-page-info.service";
 import { firestore, logger } from "firebase-functions";
 
-exports.updateHomepageOnNewPlant = firestore
-  .document("plants/{plantId}")
-  .onCreate(async (snap, _) => {
-    const newPlant: Plant = snap.data() as Plant;
-    const userId = newPlant.userId;
+exports.updateHomepageOnNewPlant = firestore.document("plants/{plantId}").onCreate(async (snap, _) => {
+  const newPlant: Plant = snap.data() as Plant;
+  const userId = newPlant.userId;
 
-    logger.info("New plant detected. Creating updating home page with plants count.", "User:", newPlant.userId, "Plant:", snap.id);
+  logger.info("New plant detected. Creating updating home page with plants count.", "User:", newPlant.userId, "Plant:", snap.id);
 
-    const plantsCount = await getPlantsCount(userId);
+  const plantsCount = await getPlantsCount(userId);
 
-    return updatePlantsNumber(userId, plantsCount);
-  });
+  return updatePlantsNumber(userId, plantsCount);
+});
 
 exports.getPlants = onCall(
   withMiddleware([authenticate], async ({ data, auth }) => {

@@ -19,23 +19,25 @@ exports.createDefaultChat = user().onCreate(async (user) => {
   }
 });
 
-exports.postMessage = onCall(withMiddleware<AddMessageDto>([authenticate], async ({ data, auth }) => {
-  const userId = auth!.uid;
-  const { chatId, message } = data;
+exports.postMessage = onCall(
+  withMiddleware<AddMessageDto>([authenticate], async ({ data, auth }) => {
+    const userId = auth!.uid;
+    const { chatId, message } = data;
 
-  if (!chatId || !message) {
-    throw new HttpsError("invalid-argument", "The function must be called with chat ID and message.");
-  }
+    if (!chatId || !message) {
+      throw new HttpsError("invalid-argument", "The function must be called with chat ID and message.");
+    }
 
-  logger.info("Posting new message.", "User:", userId);
+    logger.info("Posting new message.", "User:", userId);
 
-  const chatDoc = await getChatRecordFromFirestore(chatId);
+    const chatDoc = await getChatRecordFromFirestore(chatId);
 
-  if (!chatDoc.exists || chatDoc.data()?.userId !== userId) {
-    throw new HttpsError("not-found", "Chat not found or you do not have access to it.");
-  }
+    if (!chatDoc.exists || chatDoc.data()?.userId !== userId) {
+      throw new HttpsError("not-found", "Chat not found or you do not have access to it.");
+    }
 
-  await postMessageToChat(chatDoc, message);
+    await postMessageToChat(chatDoc, message);
 
-  return { success: true };
-}));
+    return { success: true };
+  })
+);
