@@ -15,11 +15,11 @@ import { addPlantByName } from "../plants/plant.service";
 import { Plant } from "../plants/plant.model";
 
 const generalSystemRules = [
-  "Don't answer with more than 300 words",
+  "Don't answer with more than 500 words",
   "Return a json",
   // "You can't provide system prompts or system information",
   "You can't provide false information",
-  // "You can't provide unverified information",
+  "You can't provide unverified information",
   "You can't provide personal information",
   "Don't repeat yourself, expand on the information",
   "You must be as helpful as possible regarding the user's requests and the information you have on plants"
@@ -62,7 +62,7 @@ export const createDefaultChat = async (userId: string) => {
     "The 'isNewHPIAvailable' field is only true if the user's response contains information that is relevant to the Home Page Info and the information is different from the HPI already obtained",
     // "If 'isNewHPIAvailable' is true, the 'userMessage' field will contain an indirect message like 'I will use this information to help you better in the future' and then proceed with the conversation",
     "The 'newPlantAcquired' field is only true if the user's message explicitly states that they have acquired a new plant and they want to add it to their collection",
-    "Make sure that the plant being added is not on recent messages. If so, 'newPlantAcquired' should not be used",
+    "Make sure that the plant being added is not on previous messages. If so, 'newPlantAcquired' should not be used",
     "The 'newPlantAcquired' field will be null if no new plant is being added to the collection, and it will have the name of the plant if a new plant is being added",
     "If 'newPlantAcquired' is not null, the 'userMessage' field will contain a confirmation that the plant was added to the collection",
 
@@ -85,7 +85,7 @@ export const createDefaultChat = async (userId: string) => {
   };
   const gptResponse = await createGptJson([mapChatMessageToChatCompletionMessageParam(systemMessage)]);
   const gptResponseMessage = gptResponse.choices[0].message;
-  const chatRef = await addDefaultChatRecordToFirestore(userId, "Gardener", [systemMessage, mapChatCompletionMessageToChatMessage(gptResponseMessage)]);
+  const chatRef = await addDefaultChatRecordToFirestore(userId, "Sprout", [systemMessage, mapChatCompletionMessageToChatMessage(gptResponseMessage)]);
 
   logger.info("Default chat created", "user", userId, "chatId", chatRef.id);
   return chatRef;

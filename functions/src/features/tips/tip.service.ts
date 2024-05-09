@@ -16,9 +16,9 @@ export const createDailyTip = async (userId: string): Promise<Tip> => {
     "Give the user a gardening tip, adapting to the information known about them, and the date",
     "This tip will be refreshed daily, should be unique, and should be relevant to the user's gardening experience",
     previousTips,
-    "Don't answer with more than 50 words (300 characters), the tip should be quick and easy to understand",
-    "Ensure the tip is actionable",
-    `Don't say things like "here's a tip", "my tip is" or "As a blabla user", just give the tip`,
+    "Don't answer with more than 70 words (350 characters), the tip should be quick and easy to understand",
+    "Ensure the tip is actionable during the day",
+    `Don't say things like "here's a tip", "my tip is" or "As a <nickname>", just give the tip`,
     "The current date (mm/dd/yyyy) is " + new Date().toLocaleDateString()
   ];
 
@@ -49,9 +49,10 @@ export const createSeasonalTip = async (userId: string): Promise<Tip> => {
     "Give the user a seasonal gardening tip, adapting to the information known about them, and the current season of the year",
     "This tip will be refreshed each season, should be unique, and should be relevant to the user's gardening experience",
     previousTips,
-    "Don't answer with more than 50 words (300 characters), the tip should be quick and easy to understand",
-    "Consider local gardening events, holidays, and traditional planting or harvesting times",
-    `Don't say things like "here's a tip", "my tip is" or "As a blabla user", just give the tip`,
+    "Ensure the tip is actionable during the season",
+    "Don't answer with more than 70 words (350 characters), the tip should be quick and easy to understand",
+    "Consider local gardening events for the city, holidays, and traditional planting or harvesting times",
+    `Don't say things like "here's a tip", "my tip is" or "As a <nickname>", just give the tip`,
     "The current date (mm/dd/yyyy)  is " + new Date().toLocaleDateString()
   ];
 

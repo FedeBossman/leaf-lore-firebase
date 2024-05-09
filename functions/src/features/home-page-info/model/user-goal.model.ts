@@ -13,5 +13,6 @@ export enum UserGoals {
   AchieveGreenerHome = "achieve a greener home",
   CreateGarden = "create a garden",
   SustainableGardening = "sustainable gardening",
-  CommunityEngagement = "community engagement"
+  CommunityEngagement = "community engagement",
+  Decoration = "decorate and style home"
 }

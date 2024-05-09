@@ -19,7 +19,8 @@ export const addPlantByName = async (userId: string, plantName: string) => {
     "fertilizationFrequency must always be one of the following: 'weekly', 'monthly', 'quarterly', 'yearly'",
     "soilType must always be one of the following: 'loamy', 'sandy', 'clay', 'peaty', 'chalky', 'wellDraining'",
     "potSize must always be one of the following: 'small', 'medium', 'large', 'extraLarge'",
-    "humidityRequirement must always be one of the following: 'low', 'medium', 'high'"
+    "humidityRequirement must always be one of the following: 'low', 'medium', 'high'",
+    "'notes' field should describe any additional information about the plant that is not covered by the other fields. Add potential historical data or interesting facts."
   ];
   /* eslint-disable max-len */
 

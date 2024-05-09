@@ -83,6 +83,17 @@
             }
         },
         {
+            "label": "Store Firestore indexes Configuration",
+            "type": "shell",
+            "command": "source ~/.zshrc && firebase firestore:indexes > firestore.indexes.json",
+            "problemMatcher": [],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
             "type": "npm",
             "script": "build:watch",
             "path": "functions",

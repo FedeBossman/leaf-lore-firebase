@@ -68,7 +68,7 @@ export const updateHomePageInfo = async (userId: string) => {
     "If you can't find a value, send null, or empty list",
     "'location' field will have the following fields: 'city', 'state', 'country', 'type' (" + locationTypes + ")",
     "'goals' field will have a list of the following values: " + goals,
-    "'nickname' field will have a string value created based on the user's goals, experience, and location. No need to use all or explicit, but it needs to have a sense of representation and it has to be a couple words like 'Budding Botanist'",
+    "'nickname' field will have a string value created based on the user's goals, experience, and location. No need to use all or be explicit, but it needs to have a sense of representation and it has to be a couple words like 'Budding Botanist'",
     "'type' field will have a string value based on one of the following values: " + gardenerTypeNames
   ];
   /* eslint-disable max-len */
