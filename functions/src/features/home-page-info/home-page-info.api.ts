@@ -24,7 +24,7 @@ exports.checkFieldUpdate = firestore.document("homePageInfo/{docId}").onWrite((c
   const beforeData = change.before.data();
   const afterData = change.after.data();
   if (afterData && beforeData?.location?.city !== afterData.location?.city) {
-    logger.info(`Field 'location.city' changed from ${beforeData?.location.city} to ${afterData.location?.city}. Updating weather data.`);
+    logger.info(`Field 'location.city' changed from ${beforeData?.location?.city} to ${afterData.location?.city}. Updating weather data.`);
     updateWeather(afterData.userId, { force: true });
   }
 });
